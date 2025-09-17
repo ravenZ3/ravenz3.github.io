@@ -40,5 +40,6 @@ memory's strength (retention and retrieval) depends on various factors like -
  He memorised then by reading them aloud at a fixed rhythm. He tested his retention and after intervals (from minutes to days or weeks). He relearned the same list to same criterion and monitored the conditions like time of day and fatigue, and distractions to ensure reliablity.
 I'll come back this later.
 
-### Roediger & Karpicke (2006) - *Test-enhanced leanrning*
+## The main paper for fsrs
+
 
