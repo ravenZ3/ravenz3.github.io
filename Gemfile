@@ -6,7 +6,8 @@ gem "logger" # To suppress the Ruby 3.5.0 logger warning
 
 group :jekyll_plugins do
   # Add any additional Jekyll plugins here, e.g.:
-  # gem "jekyll-feed", "~> 0.12"
+  gem "jekyll-feed", "~> 0.12"
+  gem 'jekyll-seo-tag'
 end
 
 # Update platform specification to address deprecation warning

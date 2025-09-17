@@ -165,6 +165,8 @@ PLATFORMS
 
 DEPENDENCIES
   jekyll (~> 4.4.1)
+  jekyll-feed (~> 0.12)
+  jekyll-seo-tag
   logger
   minima (~> 2.5)
   tzinfo (~> 2.0)
