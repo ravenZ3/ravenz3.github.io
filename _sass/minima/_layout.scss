@@ -54,12 +54,21 @@
   .page-link {
     color: $text-color;
     line-height: $base-line-height;
-
-    // Gaps between nav items, but not on the last one
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    !text-decoration: none;
+  
     &:not(:last-child) {
       margin-right: 20px;
     }
+  
+    &:hover {
+      background: #f8f8f8;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
   }
+  
 
   @include media-query($on-palm) {
     position: absolute;
@@ -99,8 +108,17 @@
     }
 
     input:checked ~ .trigger {
-      display: block;
+      display: flex;
+      width: 10rem;
+      height: 15rem;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
       padding-bottom: 5px;
+      border: 1px;
+      border-radius: 10px;
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     }
 
     .page-link {
@@ -270,7 +288,12 @@
 }
 .cta {
   display: flex;
+  flex-direction: column;   /* instead of flex: column */
   width: 100%;
-  justify-content: space-between;
-  align-items: center;
+  gap: 1rem;                /* spacing between items */
+  align-items: center;      /* center horizontally */
+  justify-content: center;  /* center vertically (if parent has height) */
+  padding: 2rem;
+
 }
+

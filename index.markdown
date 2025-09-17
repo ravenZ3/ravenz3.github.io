@@ -6,7 +6,7 @@ nav_exclude: true
 ---
 
 <section class="hero">
-  <h1>Ramjan</h1>
+  <h1>Ramjan Khandelwal</h1>
   <p>Computer science student at VIT Chennai. I build web things, dabble in ML, and write when the quiet hours come. This is a compact snapshot of what I’m working on and thinking about.</p>
 </section>
 
