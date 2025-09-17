@@ -2,11 +2,13 @@
 layout: post
 title:  "The Minefield"
 date:   2025-09-17 12:31:08 +0530
-categories: philosophy
+categories: [philosophy]
+tags: short-story philosophy 
 ---
-# The Minefield
 
-Two soldiers went into a minefield, not knowingly of course. One was more like a protégé carrying the map, and the other was a major. They were tasked to carry supplies between two infantry units. 
+Two soldiers walked through the morning meadow, unaware they had entered a minefield. 
+
+One was more like a protégé carrying the map, and the other was a major. They were tasked to carry supplies between two infantry units. 
 The major was feeling complacent that day, the sky blue and air pleasant on his face as they walked through the meadows. He spent the time talking about his siblings and friends and the fields back home, how the paddy fields dance in the wind when it's August. The ground was sodden yet leaf-covered, autumn's carpet collecting beneath their boots.
 
 But something happened. 

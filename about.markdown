@@ -4,15 +4,13 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+Hey, I’m Ramjan.  
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+I’m a computer science student at VIT Chennai, working my way through AI, robotics, and the messy beauty of programming. Most of my time goes into building things for the web - sometimes they work smoothly, sometimes they break in ways that teach me more than tutorials ever could.  
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+I enjoy tinkering with React, Next.js, databases, and occasionally going down rabbit holes with machine learning and Linux.  
 
+Outside of code, I play guitar, write when I can, and keep a curious eye on how people think and behave. Those things keep me grounded when the tech side of life gets too loud.  
 
-[jekyll-organization]: https://github.com/jekyll
+You can find my projects on [GitHub](https://github.com/ravenZ3),  
+or just drop me a message at **ramjankhandelwal7@gmail.com**.

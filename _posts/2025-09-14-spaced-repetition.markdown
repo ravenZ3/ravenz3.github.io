@@ -3,6 +3,7 @@ layout: post
 title:  "Spaced Repetition"
 date:   2025-09-14 15:52:08 +0530
 categories: Algorithms
+tags: Algorithms
 ---
 There is a exact time when you should revise a concept after you've learned it, and doing it at the certain duration your brain is about to forget the information ensures that you your recall probability is increased for a longer forgetting gap interval which follows your revision.
 
