@@ -30,6 +30,14 @@
   --settings-w:    40px;
 }
 
+@font-face {
+  font-family: 'Kanzlei Initialen';
+  src: url('/fonts/kanzlei-initialen.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 [data-theme="light"] {
   --bg:      #f9f3e8;
   --surface: #f0e9d9;
@@ -665,11 +673,12 @@ body {
 /* Drop cap — kind: prose */
 .drop-cap > p:first-of-type::first-letter {
   float: left;
-  font-family: var(--serif);
-  font-size: 3.8em;
-  line-height: 0.78;
-  margin: 0.07em 0.08em 0 0;
+  font-family: 'Kanzlei Initialen', var(--serif);
+  font-size: 4.8rem;
+  line-height: 0.8;
+  margin: 0.1em 0.15em 0.1em 0;
   font-weight: 400;
+  color: var(--text);
 }
 
 /* ---------------------------------------------------------------
