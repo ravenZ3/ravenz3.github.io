@@ -90,14 +90,14 @@ for (const h of headings) {
             <>
               <span class="note-meta-dates">
                 {dateStr}{modifiedStr && modifiedStr !== dateStr && (
-                  <> <span style="font-style:normal;font-size:0.7em;vertical-align:sub;color:var(--faint)">to</span> {modifiedStr}</>
+                  <> – {modifiedStr}</>
                 )}
               </span>
               <span class="sep">·</span>
             </>
           )}
-          <span class="stage-dot">{STAGE_SYMBOL[stage]}</span>
           <span>{STAGE_LABEL[stage]}</span>
+          <span class="stage-dot"> {STAGE_SYMBOL[stage]}</span>
           {certainty && (
             <>
               <span class="sep">·</span>
