@@ -1,0 +1,25 @@
+---
+import Note from '../../layouts/Note.astro';
+import { getAllNotes, buildBacklinkIndex } from '../../lib/garden';
+
+export async function getStaticPaths() {
+  const [notes, backlinkIndex] = await Promise.all([
+    getAllNotes(),
+    buildBacklinkIndex(),
+  ]);
+
+  return notes.map(note => ({
+    params: { collection: note.collection, slug: note.slug },
+    props: {
+      note,
+      backlinks: backlinkIndex.get(note.slug) ?? [],
+    },
+  }));
+}
+
+const { note, backlinks } = Astro.props;
+const { Content, headings } = await (note as any).render();
+---
+<Note note={note} backlinks={backlinks} headings={headings}>
+  <Content />
+</Note>

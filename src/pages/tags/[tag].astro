@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getAllNotes, STAGE_SYMBOL, STAGE_LABEL, noteUrl } from '../../lib/garden';
+import type { GardenCollection } from '../../lib/garden';
+
+export async function getStaticPaths() {
+  const allNotes = await getAllNotes();
+  const tagSet = new Set(allNotes.flatMap(n => n.data.tags));
+
+  return [...tagSet].map(tag => ({
+    params: { tag },
+    props: {
+      tag,
+      notes: allNotes
+        .filter(n => n.data.tags.includes(tag))
+        .sort((a, b) => {
+          const order = { evergreen: 0, budding: 1, seedling: 2 };
+          return order[a.data.stage] - order[b.data.stage];
+        }),
+    },
+  }));
+}
+
+const { tag, notes } = Astro.props;
+---
+<Base title={`#${tag}`} activeNav="tags">
+  <div class="container">
+
+    <header class="tag-header">
+      <p class="section-label">Tag</p>
+      <h1 class="page-title">{tag}</h1>
+      <p class="page-subtitle">{notes.length} note{notes.length !== 1 ? 's' : ''}</p>
+    </header>
+
+    <ul class="note-rows">
+      {notes.map(note => (
+        <li class="note-row">
+          <span class={`note-row-stage stage-${note.data.stage}`} title={STAGE_LABEL[note.data.stage]}>
+            {STAGE_SYMBOL[note.data.stage]}
+          </span>
+          <div class="note-row-body">
+            <a class="note-row-title" href={noteUrl(note.collection as GardenCollection, note.slug)}>
+              {note.data.title}
+            </a>
+            <span class="note-row-collection">{note.collection}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <p class="back-link"><a href="/tags">← All tags</a></p>
+
+  </div>
+</Base>
+
+<style>
+  .tag-header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 0; }
+  .note-rows { list-style: none; padding: 0; margin: 0; }
+
+  .note-row-collection {
+    font-family: var(--sans);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .back-link { margin-top: 2.5rem; font-family: var(--sans); font-size: 0.68rem; }
+  .back-link a { color: var(--faint); text-decoration: none; }
+  .back-link a:hover { color: var(--muted); }
+</style>

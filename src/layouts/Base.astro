@@ -1,0 +1,340 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  activeNav?: string;
+}
+
+const { title, description, activeNav } = Astro.props;
+const siteName = 'ravenZ3';
+const pageTitle = title === siteName ? siteName : `${title} · ${siteName}`;
+const defaultDesc = 'A digital garden of notes in various stages — prose, perspectives, and reflections by Ramjan Khandelwal.';
+
+const navItems = [
+  { label: 'Literary',     href: '/literary' },
+  { label: 'Perspectives', href: '/perspectives' },
+  { label: 'Reflections',  href: '/reflections' },
+  { label: 'About',        href: '/about' },
+];
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={description ?? defaultDesc} />
+  <title>{pageTitle}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+  <!-- Apply saved theme before paint to avoid flash -->
+  <script is:inline>
+    (function() {
+      var t = localStorage.getItem('rz-theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <style is:global>
+    @import '../styles/global.css';
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="/" class="site-logo" aria-label="ravenZ3 home">rZ</a>
+      <nav class="site-nav">
+        {navItems.map(item => (
+          <a
+            href={item.href}
+            {...(activeNav === item.label.toLowerCase() ? { 'data-active': '' } : {})}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <a href="mailto:ramjankhandelwal7@gmail.com">Email</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/ravenZ3" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="/about">About</a>
+  </footer>
+
+  <!-- Fixed right icon sidebar -->
+  <aside class="settings-bar" id="settings-bar" aria-label="Site controls">
+
+    <!-- Settings gear — opens settings panel -->
+    <button class="settings-btn" id="btn-settings" title="Settings" aria-expanded="false">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.07-1.55-.9-.52a7.1 7.1 0 0 0 0-1.86l.9-.52a1 1 0 0 0 .37-1.37l-1-1.73a1 1 0 0 0-1.37-.37l-.9.52a7 7 0 0 0-1.61-.93V6a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v1.07a7 7 0 0 0-1.61.93l-.9-.52a1 1 0 0 0-1.37.37l-1 1.73a1 1 0 0 0 .37 1.37l.9.52a7.1 7.1 0 0 0 0 1.86l-.9.52a1 1 0 0 0-.37 1.37l1 1.73a1 1 0 0 0 1.37.37l.9-.52a7 7 0 0 0 1.61.93V18a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-1.07a7 7 0 0 0 1.61-.93l.9.52a1 1 0 0 0 1.37-.37l1-1.73a1 1 0 0 0-.37-1.37z"/>
+      </svg>
+    </button>
+
+    <div class="settings-divider settings-secondary"></div>
+
+    <!-- Dark mode -->
+    <button class="settings-btn settings-secondary" id="btn-dark" title="Dark theme" data-theme-target="dark">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+      </svg>
+    </button>
+
+    <!-- Light mode -->
+    <button class="settings-btn settings-secondary" id="btn-light" title="Light theme" data-theme-target="light">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Sepia mode -->
+    <button class="settings-btn settings-secondary" id="btn-sepia" title="Sepia theme" data-theme-target="sepia">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+        <path d="M12 2a10 10 0 0 1 0 20V2z"/>
+      </svg>
+    </button>
+
+    <div class="settings-divider settings-secondary"></div>
+
+    <!-- Font size decrease -->
+    <button class="settings-btn settings-secondary" id="btn-font-down" title="Smaller text">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <text x="2" y="18" font-size="18" fill="currentColor" font-family="serif">A</text>
+        <text x="14" y="14" font-size="10" fill="currentColor" font-family="serif">a</text>
+      </svg>
+    </button>
+
+    <!-- Font size increase -->
+    <button class="settings-btn settings-secondary" id="btn-font-up" title="Larger text">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <text x="1" y="18" font-size="22" fill="currentColor" font-family="serif">A</text>
+        <text x="15" y="14" font-size="11" fill="currentColor" font-family="serif">a</text>
+      </svg>
+    </button>
+
+    <div class="settings-divider settings-secondary"></div>
+
+    <!-- TOC toggle (mobile) -->
+    <button class="settings-btn" id="btn-toc" title="Table of contents">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <line x1="3" y1="6"  x2="21" y2="6"  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="3" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="3" y1="18" x2="11" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Search -->
+    <button class="settings-btn" id="btn-search" title="Search">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Help / About -->
+    <button class="settings-btn" id="btn-help" title="About this site" onclick="location.href='/about'">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+  </aside>
+
+  <!-- Search panel -->
+  <div class="search-panel" id="search-panel" role="search">
+    <input class="search-input" id="search-input" type="search" placeholder="Search notes…" autocomplete="off" />
+    <div id="search-results" style="margin-top:0.75rem; font-family: var(--serif); font-size:0.85rem; color:var(--muted);"></div>
+  </div>
+
+  <script>
+    // ── Theme toggle ──────────────────────────────────────────────
+    const root = document.documentElement;
+    const STORAGE_KEY = 'rz-theme';
+
+    function setTheme(t: string) {
+      root.setAttribute('data-theme', t);
+      localStorage.setItem(STORAGE_KEY, t);
+      document.querySelectorAll('.settings-btn[data-theme-target]').forEach(b => {
+        (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.themeTarget === t);
+      });
+    }
+
+    document.querySelectorAll('.settings-btn[data-theme-target]').forEach(btn => {
+      btn.addEventListener('click', () => setTheme((btn as HTMLElement).dataset.themeTarget!));
+    });
+
+    // Mark initial active theme button
+    (function() {
+      const cur = root.getAttribute('data-theme') ||
+        (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      document.querySelectorAll('.settings-btn[data-theme-target]').forEach(b => {
+        (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.themeTarget === cur);
+      });
+    })();
+
+    // ── Font size ─────────────────────────────────────────────────
+    const FONT_STORAGE = 'rz-fontsize';
+    let fontSize = parseInt(localStorage.getItem(FONT_STORAGE) || '19', 10);
+    document.documentElement.style.fontSize = fontSize + 'px';
+
+    document.getElementById('btn-font-up')?.addEventListener('click', () => {
+      fontSize = Math.min(fontSize + 1, 24);
+      document.documentElement.style.fontSize = fontSize + 'px';
+      localStorage.setItem(FONT_STORAGE, String(fontSize));
+    });
+    document.getElementById('btn-font-down')?.addEventListener('click', () => {
+      fontSize = Math.max(fontSize - 1, 15);
+      document.documentElement.style.fontSize = fontSize + 'px';
+      localStorage.setItem(FONT_STORAGE, String(fontSize));
+    });
+
+    // ── Settings panel toggle (gear) ──────────────────────────────
+    const settingsBtn = document.getElementById('btn-settings');
+    const settingsBar = document.getElementById('settings-bar');
+
+    settingsBtn?.addEventListener('click', () => {
+      if (!settingsBar) return;
+      const isCollapsed = settingsBar.classList.toggle('collapsed');
+      settingsBtn.setAttribute('aria-expanded', String(!isCollapsed));
+      document.body.style.paddingRight = isCollapsed ? '0px' : 'var(--settings-w)';
+    });
+
+    // Close on escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        settingsBar?.classList.remove('expanded');
+        settingsBtn?.classList.remove('active');
+        settingsBtn?.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // ── Search panel ──────────────────────────────────────────────
+    const searchBtn   = document.getElementById('btn-search');
+    const searchPanel = document.getElementById('search-panel');
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const searchResults = document.getElementById('search-results');
+    let searchIndex: any[] = [];
+    let indexLoaded = false;
+
+    async function loadSearchIndex() {
+      if (indexLoaded) return;
+      try {
+        // Try fetching with /api/search.json (which Astro dev server maps)
+        const res = await fetch('/api/search.json');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        searchIndex = await res.json();
+        indexLoaded = true;
+        console.log('Search index loaded:', searchIndex.length, 'notes');
+      } catch (e) {
+        console.error('Failed to load search index via /api/search.json, trying /api/search.json.ts', e);
+        try {
+          const res2 = await fetch('/api/search.json.ts');
+          searchIndex = await res2.json();
+          indexLoaded = true;
+        } catch (e2) {
+          console.error('Search index fetch failed completely', e2);
+          if (searchResults) searchResults.innerHTML = '<div style="padding:0.5rem; color:red; font-size:0.7rem;">Search error: failed to load index.</div>';
+        }
+      }
+    }
+
+
+    function doSearch(query: string) {
+      if (!searchResults || !query.trim()) {
+        if (searchResults) searchResults.innerHTML = '';
+        return;
+      }
+      const q = query.toLowerCase();
+      const matches = searchIndex.filter(n => 
+        n.title.toLowerCase().includes(q) || 
+        n.description.toLowerCase().includes(q) ||
+        n.excerpt.toLowerCase().includes(q)
+      ).slice(0, 8); // Top 8 matches
+
+      searchResults.innerHTML = matches.map(n => `
+        <a href="/${n.collection}/${n.slug}" class="search-result-item">
+          <div class="sr-title">${n.title}</div>
+          <div class="sr-excerpt">${n.description || n.excerpt.slice(0, 80) + '...'}</div>
+        </a>
+      `).join('');
+      
+      if (matches.length === 0) {
+        searchResults.innerHTML = '<div style="padding:0.5rem; color:var(--faint);">No matches found.</div>';
+      }
+    }
+
+    searchBtn?.addEventListener('click', async () => {
+      const open = searchPanel?.classList.toggle('open');
+      searchBtn.classList.toggle('active', !!open);
+      if (open) {
+        await loadSearchIndex();
+        searchInput?.focus();
+      }
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+      doSearch((e.target as HTMLInputElement).value);
+    });
+
+    document.addEventListener('keydown', async (e) => {
+      if (e.key === 'Escape') {
+        searchPanel?.classList.remove('open');
+        searchBtn?.classList.remove('active');
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        searchPanel?.classList.add('open');
+        await loadSearchIndex();
+        searchInput?.focus();
+      }
+    });
+
+
+    // ── Mobile TOC toggle ─────────────────────────────────────────
+    document.getElementById('btn-toc')?.addEventListener('click', () => {
+      const sidebar = document.querySelector('.note-sidebar-left') as HTMLElement;
+      if (sidebar) {
+        const isHidden = sidebar.style.display === 'none' || getComputedStyle(sidebar).display === 'none';
+        sidebar.style.display = isHidden ? 'block' : '';
+      }
+    });
+    // ── Intro buttons (homepage) ──────────────────────────────────
+    document.querySelectorAll('.intro-btn[data-theme-set]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = (btn as HTMLElement).dataset.themeSet!;
+        if (t === 'auto') {
+          localStorage.removeItem(STORAGE_KEY);
+          location.reload(); // Quick way to reset to system preference
+        } else {
+          setTheme(t);
+        }
+      });
+    });
+
+    document.getElementById('intro-search-btn')?.addEventListener('click', async () => {
+      searchPanel?.classList.add('open');
+      searchBtn?.classList.add('active');
+      await loadSearchIndex();
+      searchInput?.focus();
+    });
+  </script>
+
+</body>
+</html>

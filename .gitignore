@@ -1,5 +1,8 @@
-_site
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-vendor
+dist/
+node_modules/
+.astro/
+
+# Jekyll leftovers
+_site/
+.jekyll-cache/
+.sass-cache/

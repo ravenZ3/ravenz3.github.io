@@ -1,0 +1,151 @@
+---
+import Base from './Base.astro';
+import { noteUrl, STAGE_SYMBOL, STAGE_LABEL } from '../lib/garden';
+import type { GardenNote, NoteRef, GardenCollection } from '../lib/garden';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  note: GardenNote;
+  backlinks: NoteRef[];
+  headings: Heading[];
+}
+
+const { note, backlinks, headings } = Astro.props;
+const { title, stage, tags, date, modified, kind, description, certainty, importance } = note.data;
+const isDropCap = kind === 'prose';
+
+const dateStr = date?.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })
+  ?.replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
+const modifiedStr = modified?.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })
+  ?.replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
+
+// Build numbered TOC — h2, h3, h4 (matching the Gwern depth shown in screenshots)
+interface TocItem { heading: Heading; label: string; }
+const tocItems: TocItem[] = [];
+let h2Count = 0;
+let h3Count = 0;
+let h4Count = 0;
+
+for (const h of headings) {
+  if (h.depth === 2) {
+    h2Count++;
+    h3Count = 0;
+    h4Count = 0;
+    tocItems.push({ heading: h, label: `${h2Count}` });
+  } else if (h.depth === 3) {
+    h3Count++;
+    h4Count = 0;
+    tocItems.push({ heading: h, label: `${h2Count}.${h3Count}` });
+  } else if (h.depth === 4) {
+    h4Count++;
+    tocItems.push({ heading: h, label: `${h2Count}.${h3Count}.${h4Count}` });
+  }
+}
+---
+<Base title={title} description={description} activeNav={note.collection}>
+  <div class="note-layout">
+
+    <!-- Left sidebar: TOC -->
+    <aside class="note-sidebar-left" id="note-toc-sidebar">
+      {tocItems.length > 0 && (
+        <nav class="toc" aria-label="Table of contents">
+          <p class="toc-label">Contents</p>
+          <ol class="toc-list">
+            {tocItems.map(item => (
+              <li class={`toc-item depth-${item.heading.depth}`}>
+                <span class="toc-num">{item.label}</span>
+                <a href={`#${item.heading.slug}`}>{item.heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+    </aside>
+
+    <!-- Center: note content -->
+    <div class="note-body">
+      <header class="note-header">
+        {tags.length > 0 && (
+          <p class="note-tags">
+            {tags.map((tag, i) => (
+              <>
+                <a href={`/tags/${tag}`} class="note-tag">{tag}</a>
+                {i < tags.length - 1 && <span class="note-tag-sep">,</span>}
+              </>
+            ))}
+          </p>
+        )}
+
+        <h1 class="note-title">{title}</h1>
+
+        {description && <p class="note-description">{description}</p>}
+
+        <p class="note-meta">
+          {dateStr && (
+            <>
+              <span class="note-meta-dates">
+                {dateStr}{modifiedStr && modifiedStr !== dateStr && (
+                  <> <span style="font-style:normal;font-size:0.7em;vertical-align:sub;color:var(--faint)">to</span> {modifiedStr}</>
+                )}
+              </span>
+              <span class="sep">·</span>
+            </>
+          )}
+          <span class="stage-dot">{STAGE_SYMBOL[stage]}</span>
+          <span>{STAGE_LABEL[stage]}</span>
+          {certainty && (
+            <>
+              <span class="sep">·</span>
+              <span class="note-meta-certainty" title="How confident the author is in the claims here">↓certainty: {certainty}</span>
+              <span>{'\u25CB'}</span>
+            </>
+          )}
+          {importance !== undefined && (
+            <>
+              <span class="sep">·</span>
+              <span class="note-meta-importance" title="How important the author thinks this note is (0–10)">↓importance: {importance}</span>
+            </>
+          )}
+        </p>
+      </header>
+
+      <div class:list={['prose', isDropCap && 'drop-cap']}>
+        <slot />
+      </div>
+    </div>
+
+    <!-- Right sidebar: sidenotes + backlinks -->
+    <aside class="note-sidebar-right">
+      <!-- Sidenote items injected here by sidenotes.js -->
+      <div class="sidenote-column" id="sidenote-column"></div>
+
+      {backlinks.length > 0 && (
+        <div class="backlinks-section">
+          <p class="backlinks-label">Linked from</p>
+          <ul class="backlinks-list">
+            {backlinks.map(link => (
+              <li>
+                <a href={noteUrl(link.collection as GardenCollection, link.slug)}>
+                  {link.title}
+                </a>
+                <span class="backlinks-collection">{link.collection}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </aside>
+
+  </div>
+</Base>
+
+<script>
+  // Import the sidenotes script inline for this page
+  // (We need access to DOM, so this runs client-side)
+  import '../scripts/sidenotes.js';
+</script>
