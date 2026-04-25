@@ -1206,7 +1206,7 @@ body {
   opacity: 0;
   transform: translateX(-10px);
   pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.1s ease, transform 0.3s ease;
 }
 
 .sticky-header.visible {
@@ -1217,7 +1217,7 @@ body {
 
 .sticky-title {
   font-family: var(--serif);
-  font-size: 0.85rem;
+  font-size: 0.65rem;
   font-weight: 700;
   font-variant: small-caps;
   letter-spacing: 0.08em;
@@ -1225,7 +1225,7 @@ body {
   white-space: nowrap;
   line-height: 1.1;
   margin-bottom: 0.25rem;
-  text-transform: uppercase;
+  /* stext-transform: uppercase; */
 }
 
 .sticky-progress-container {
@@ -1248,6 +1248,7 @@ body {
     height: 48px;
     padding: 0 1rem;
   }
+
   .sticky-title {
     font-size: 0.75rem;
     max-width: 70%;
@@ -1326,5 +1327,3 @@ body {
   }
 
 }
-
-
