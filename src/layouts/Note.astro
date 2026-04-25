@@ -198,20 +198,24 @@ for (const h of headings) {
       if (active) {
         const tag = active.tagName;
         const text = active.textContent ?? '';
-        let label = text;
 
         if (tag === 'H3') {
           const idx = headings.indexOf(active);
+          let parentText = '';
           for (let i = idx - 1; i >= 0; i--) {
             if (headings[i].tagName === 'H2') {
-              label = (headings[i].textContent ?? '') + ' › ' + text;
+              parentText = headings[i].textContent ?? '';
               break;
             }
           }
+          stickySection.innerHTML = parentText
+            ? `<span>${parentText}</span><span class="sticky-subsection">${text}</span>`
+            : `<span>${text}</span>`;
+        } else {
+          stickySection.innerHTML = `<span>${text}</span>`;
         }
 
-        stickySection.textContent = label;
-        stickySection.style.display = 'block';
+        stickySection.style.display = 'flex';
       } else {
         stickySection.style.display = 'none';
       }
