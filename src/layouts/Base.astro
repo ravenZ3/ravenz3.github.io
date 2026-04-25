@@ -213,7 +213,6 @@ const navItems = [
       if (!settingsBar) return;
       const isCollapsed = settingsBar.classList.toggle('collapsed');
       settingsBtn.setAttribute('aria-expanded', String(!isCollapsed));
-      document.body.style.paddingRight = isCollapsed ? '0px' : 'var(--settings-w)';
     });
 
     // Close on escape

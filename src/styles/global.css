@@ -106,8 +106,6 @@ body {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  /* make room for the fixed right settings bar */
-  padding-right: var(--settings-w);
 }
 
 /* ---------------------------------------------------------------
@@ -1197,21 +1195,23 @@ body {
   left: 0;
   width: auto;
   max-width: 400px;
-  height: auto;
-  background: transparent;
-  border-bottom: none;
-  z-index: 1000;
-  display: block;
-  padding: 0.65rem var(--pad);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.5rem var(--pad);
   opacity: 0;
-  transform: translateX(-10px);
+  transform: translateY(-4px);
   pointer-events: none;
-  transition: opacity 0.1s ease, transform 0.3s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 .sticky-header.visible {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
   pointer-events: all;
 }
 
@@ -1245,7 +1245,6 @@ body {
 
 @media (max-width: 640px) {
   .sticky-header {
-    height: 48px;
     padding: 0 1rem;
   }
 
@@ -1288,7 +1287,7 @@ body {
   }
 
   :root {
-    --header-h: 38px;
+    --header-h: 64px;
     --settings-w: 36px;
     --pad: 1rem;
   }
@@ -1297,16 +1296,29 @@ body {
     padding: 0 1.25rem;
   }
 
+  .site-header-inner {
+    flex-direction: column;
+    height: auto;
+    padding: 0.4rem 0 0.35rem;
+    gap: 0.15rem;
+  }
+
+  .site-nav {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
   .site-nav a {
-    padding: 0 0.65rem;
+    padding: 0.1rem 0.55rem;
     font-size: 0.54rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.09em;
   }
 
   .site-logo {
-    padding: 0 0.7rem;
+    padding: 0;
     font-size: 1.3rem;
-    min-width: 48px;
+    min-width: unset;
   }
 
   .note-title {
