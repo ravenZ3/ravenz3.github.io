@@ -62,6 +62,13 @@ const categoryRows = chunk(categories, 3);
 
 
 
+    <div class="stage-filters" id="stage-filters">
+      <button class="stage-filter active" data-filter="all">All</button>
+      <button class="stage-filter" data-filter="evergreen">● Evergreen</button>
+      <button class="stage-filter" data-filter="budding">◑ Budding</button>
+      <button class="stage-filter" data-filter="seedling">○ Seedling</button>
+    </div>
+
     {categoryRows.map((row, rowIdx) => (
       <>
         <div class="category-row">
@@ -70,7 +77,7 @@ const categoryRows = chunk(categories, 3);
               <h2 class="category-title">{cat.title}</h2>
               <ul class="category-list">
                 {cat.notes.map(note => (
-                  <li>
+                  <li data-stage={note.data.stage ?? 'seedling'}>
                     <span class="category-icon">✦</span>
                     <a href={noteUrl(note.collection, note.slug)}>{note.data.title}</a>
                   </li>
@@ -78,7 +85,6 @@ const categoryRows = chunk(categories, 3);
               </ul>
             </section>
           ))}
-          {/* Fill empty spots if less than 3 cats in row */}
           {row.length < 3 && [...Array(3 - row.length)].map(() => <div class="category-col empty"></div>)}
         </div>
 
@@ -197,6 +203,40 @@ const categoryRows = chunk(categories, 3);
   line-height: 1;
 }
 
+/* ── Stage filters ─────────────────────────────────────────────── */
+.stage-filters {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-bottom: 2rem;
+}
+
+.stage-filter {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.65rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.1s;
+}
+
+.stage-filter:hover {
+  color: var(--text);
+  border-color: var(--muted);
+}
+
+.stage-filter.active {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--muted);
+}
+
 /* ── Responsive ────────────────────────────────────────────────── */
 @media (max-width: 1000px) {
   .category-row {
@@ -215,3 +255,17 @@ const categoryRows = chunk(categories, 3);
   }
 }
 </style>
+
+<script>
+  document.querySelectorAll('.stage-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.stage-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = (btn as HTMLElement).dataset.filter;
+      document.querySelectorAll<HTMLElement>('.category-list li[data-stage]').forEach(li => {
+        li.style.display = (filter === 'all' || li.dataset.stage === filter) ? '' : 'none';
+      });
+    });
+  });
+</script>
