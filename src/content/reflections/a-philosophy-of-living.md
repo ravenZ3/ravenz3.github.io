@@ -13,7 +13,7 @@ What I know is the texture of the life I am building toward - not the destinatio
 
 ---
 
-**On Freedom**
+## On Freedom
 
 The deepest thing I want is to not be trapped. Not by birthplace, not by finances, not by someone else's structure, not by my own fear. I want the ability to leave weak conditions, to reinvent, to choose my environment rather than inherit it by default.
 
@@ -23,7 +23,7 @@ Chennai is not a limitation. It is current terrain. All places are current terra
 
 ---
 
-**On Work**
+## On Work
 
 I want to build things that did not exist before. Intelligent systems, music, writing, maybe companies. The act of making is how I process being alive - not as productivity, not as output, but as thinking made visible.
 
@@ -35,7 +35,7 @@ I do not need a prestigious address on my resume to know I am capable. But I am 
 
 ---
 
-**On the Body**
+## On the Body
 
 I want to be physically alive, not just mentally. Surfing, calisthenics, gymnastics - these are not hobbies appended to a career. They are the same philosophy applied to a different medium. Mastery through your own body. No equipment, no institution, no permission required. Portable. Honest. Difficult in the right ways.
 
@@ -43,7 +43,7 @@ The body and mind are not separate departments. I refuse to live like they are.
 
 ---
 
-**On Curiosity**
+## On Curiosity
 
 I cannot help being interested in too many things. Neuroscience, quantum physics, embedded systems, philosophy, music theory, competitive programming. People sometimes read this as scattered. I read it as integrity.
 
@@ -53,7 +53,7 @@ I want to understand how things actually work. Not the surface explanation. The 
 
 ---
 
-**On Creating**
+## On Creating
 
 I want to write a book someday. I want to play guitar in a street somewhere that is not here. I want to make music that is mine. I want to write code that solves something real for someone real.
 
@@ -61,7 +61,7 @@ Creating is not separate from living. It is the evidence that I was here and pay
 
 ---
 
-**On Needing Little**
+## On Needing Little
 
 I do not need much to feel rich. Good problems, a guitar, open water somewhere, people worth talking to, enough money to not be anxious. That is the list. It is shorter than most people's and I think that is an advantage, not a lack.
 
@@ -69,7 +69,7 @@ Low burn rate is a weapon. I am learning to use it.
 
 ---
 
-**On Recognition and Proof**
+## On Recognition and Proof
 
 I want to prove something. I know this about myself and I am not fully sure who I am proving it to. Myself, probably. The version of me that still isn't sure.
 
@@ -79,7 +79,7 @@ I am not there yet. That is fine.
 
 ---
 
-**On the Whole Thing**
+## On the Whole Thing
 
 I am trying to become someone who is deeply competent but not institutional. Fully alive, not just successful. Creative without performing creativity. Free without being unmoored.
 
@@ -96,5 +96,3 @@ That is enough to move toward.
 *Written at 22, in Chennai, when things were unclear but starting to have a shape.*
 
 *Unfinished. Deliberately. The best thing that can happen to this is that time proves it wrong in interesting ways.*
-
-*Co-authored in conversation with Claude Sonnet 4.6.*
