@@ -47,8 +47,11 @@ for (const h of headings) {
 }
 ---
 <Base title={title} description={description} activeNav={note.collection}>
-  <div class="progress-container">
-    <div class="progress-bar" id="reading-progress"></div>
+  <div class="sticky-header" id="sticky-header">
+    <div class="sticky-title">{title}</div>
+    <div class="sticky-progress-container">
+      <div class="sticky-progress-bar" id="sticky-progress"></div>
+    </div>
   </div>
 
   <div class="note-layout">
@@ -155,14 +158,24 @@ for (const h of headings) {
 <script>
   import '../scripts/sidenotes.js';
 
-  // Reading progress bar
-  const progressBar = document.getElementById('reading-progress');
-  if (progressBar) {
+  // Sticky Progress Header
+  const stickyHeader = document.getElementById('sticky-header');
+  const progressBar = document.getElementById('sticky-progress');
+  
+  if (stickyHeader && progressBar) {
     window.addEventListener('scroll', () => {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
+      
       progressBar.style.width = scrolled + "%";
+      
+      // Show header after scrolling down 200px
+      if (winScroll > 200) {
+        stickyHeader.classList.add('visible');
+      } else {
+        stickyHeader.classList.remove('visible');
+      }
     });
   }
 </script>
