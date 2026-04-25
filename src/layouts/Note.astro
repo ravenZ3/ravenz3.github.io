@@ -13,11 +13,9 @@ interface Props {
   note: GardenNote;
   backlinks: NoteRef[];
   headings: Heading[];
-  prev?: GardenNote | null;
-  next?: GardenNote | null;
 }
 
-const { note, backlinks, headings, prev, next } = Astro.props;
+const { note, backlinks, headings } = Astro.props;
 const { title, stage, tags, date, modified, kind, description, certainty, importance } = note.data;
 const isDropCap = kind === 'prose';
 
@@ -122,28 +120,6 @@ for (const h of headings) {
       <div class:list={['prose', isDropCap && 'drop-cap']}>
         <slot />
       </div>
-
-      <!-- Navigation: Prev / Next -->
-      {(prev || next) && (
-        <nav class="note-nav" aria-label="Note navigation">
-          <div class="note-nav-prev">
-            {prev && (
-              <a href={noteUrl(prev.collection as GardenCollection, prev.slug)}>
-                <span class="nav-label">Previous</span>
-                <span class="nav-title">{prev.data.title}</span>
-              </a>
-            )}
-          </div>
-          <div class="note-nav-next">
-            {next && (
-              <a href={noteUrl(next.collection as GardenCollection, next.slug)}>
-                <span class="nav-label">Next</span>
-                <span class="nav-title">{next.data.title}</span>
-              </a>
-            )}
-          </div>
-        </nav>
-      )}
 
       <!-- Similar Links (Gwern style) -->
       {backlinks.length > 0 && (

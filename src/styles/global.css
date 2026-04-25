@@ -651,67 +651,6 @@ body {
   padding-bottom: 3.5rem;
 }
 
-/* ---------------------------------------------------------------
-   Note Navigation (Prev / Next)
---------------------------------------------------------------- */
-.note-body .note-nav {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 5rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
-}
-
-.note-nav-prev,
-.note-nav-next {
-  display: flex;
-  flex-direction: column;
-}
-
-.note-nav-next {
-  text-align: right;
-  align-items: flex-end;
-}
-
-.note-nav a {
-  text-decoration: none !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 0.25rem;
-  color: var(--muted);
-}
-
-.note-nav .nav-label {
-  font-family: var(--sans);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--faint);
-  display: block;
-}
-
-.note-nav .nav-title {
-  font-family: var(--serif);
-  font-size: 1.15rem;
-  color: var(--muted);
-  transition: color 0.1s;
-  display: block;
-}
-
-.note-nav a:hover .nav-title {
-  color: var(--text);
-  text-decoration: underline;
-  text-decoration-color: var(--border);
-}
-
-@media (max-width: 600px) {
-  .note-body .note-nav {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-}
 
 /* ---------------------------------------------------------------
    Similar Links Section
