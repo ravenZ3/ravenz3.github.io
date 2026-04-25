@@ -21,8 +21,9 @@ const { note, backlinks, headings, prev, next } = Astro.props;
 const { title, stage, tags, date, modified, kind, description, certainty, importance } = note.data;
 const isDropCap = kind === 'prose';
 
-const dateStr = date?.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-const modifiedStr = modified?.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const formatDate = (d: Date | undefined) => d?.toISOString().split('T')[0];
+const dateStr = formatDate(date);
+const modifiedStr = formatDate(modified);
 
 // Build numbered TOC — h2, h3, h4
 interface TocItem { heading: Heading; label: string; }
@@ -74,38 +75,48 @@ for (const h of headings) {
     <!-- Center: note content -->
     <div class="note-body">
       <header class="note-header">
-        {tags.length > 0 && (
-          <p class="note-tags">
-            {tags.map((tag, i) => (
-              <>
-                <a href={`/tags/${tag}`} class="note-tag">{tag}</a>
-                {i < tags.length - 1 && <span class="note-tag-sep">,</span>}
-              </>
-            ))}
-          </p>
-        )}
+        <p class="note-tags">
+          <a href={`/${note.collection}/`} class="note-tag" style="font-style: italic; font-weight: 400;">{note.collection}</a>
+        </p>
 
         <h1 class="note-title">{title}</h1>
 
         {description && <p class="note-description">{description}</p>}
 
-        <p class="note-meta">
+        <div class="note-meta">
+          <span class="note-meta-author">by Ramjan</span>
+          <span class="sep">·</span>
           <span class="note-meta-dates">
             {dateStr}{modifiedStr && modifiedStr !== dateStr && (
-              <> (updated {modifiedStr})</>
+              <>–{modifiedStr}</>
             )}
           </span>
           <span class="sep">·</span>
           <span class="note-meta-stage" title={`Stage: ${STAGE_LABEL[stage]}`}>
-            {STAGE_SYMBOL[stage]} {stage}
+            {stage} {STAGE_SYMBOL[stage]}
           </span>
           {certainty && (
             <>
               <span class="sep">·</span>
-              <span class="note-meta-certainty" title="Epistemic certainty">{certainty}</span>
+              <span class="note-meta-certainty">
+                <span class="note-meta-label">⌊certainty:</span> {certainty} {STAGE_SYMBOL[stage]}
+              </span>
             </>
           )}
-        </p>
+          {importance !== undefined && (
+            <>
+              <span class="sep">·</span>
+              <span class="note-meta-importance">
+                <span class="note-meta-label">⌊importance:</span> {importance}
+              </span>
+            </>
+          )}
+        </div>
+        <div class="note-meta" style="margin-top: 0.35rem; font-size: 0.78rem;">
+          <a href="#backlinks" class="note-tag" style="text-decoration: none;">⌊backlinks☗</a>
+          <span class="sep">·</span>
+          <a href="#similar" class="note-tag" style="text-decoration: none;">⌊similar≈</a>
+        </div>
       </header>
 
       <div class:list={['prose', isDropCap && 'drop-cap']}>
@@ -133,27 +144,33 @@ for (const h of headings) {
           </div>
         </nav>
       )}
-    </div>
 
-    <!-- Right sidebar: sidenotes + backlinks -->
-    <aside class="note-sidebar-right">
-      <div class="sidenote-column" id="sidenote-column"></div>
-
+      <!-- Similar Links (Gwern style) -->
       {backlinks.length > 0 && (
-        <div class="backlinks-section">
-          <p class="backlinks-label">Linked from</p>
-          <ul class="backlinks-list">
+        <div id="similar" class="similar-links-section">
+          <div class="similar-links-heading">Similar Links</div>
+          <ul class="similar-links-grid">
             {backlinks.map(link => (
               <li>
                 <a href={noteUrl(link.collection as GardenCollection, link.slug)}>
                   {link.title}
                 </a>
-                <span class="backlinks-collection">{link.collection}</span>
               </li>
             ))}
           </ul>
         </div>
       )}
+
+      <div style="text-align: center; margin: 4rem 0 2rem; font-family: var(--serif); font-size: 0.9rem;">
+        <a href={`/${note.collection}/`} style="text-decoration: none; color: var(--muted);">
+          ⌊ Return to {note.collection} index ↖
+        </a>
+      </div>
+    </div>
+
+    <!-- Right sidebar: sidenotes -->
+    <aside class="note-sidebar-right">
+      <div class="sidenote-column" id="sidenote-column"></div>
     </aside>
 
   </div>

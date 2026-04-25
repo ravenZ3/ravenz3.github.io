@@ -601,19 +601,32 @@ body {
 
 .note-meta {
   font-family: var(--serif);
-  font-style: italic;
-  font-size: 0.78rem;
-  color: var(--faint);
+  font-style: normal;
+  font-size: 0.82rem;
+  color: var(--muted);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.6rem;
   flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.note-meta span,
+.note-meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
 }
 
 .note-meta .sep {
-  color: var(--border);
-  font-style: normal;
+  color: var(--faint);
+  font-size: 0.8em;
+}
+
+.note-meta-label {
+  color: var(--faint);
+  font-size: 0.9em;
 }
 
 .stage-dot {
@@ -632,10 +645,135 @@ body {
 --------------------------------------------------------------- */
 .prose {
   font-size: 1rem;
-  line-height: 1.7;
+  line-height: 1.35;
   text-align: justify;
   hyphens: auto;
   padding-bottom: 3.5rem;
+}
+
+/* ---------------------------------------------------------------
+   Note Navigation (Prev / Next)
+--------------------------------------------------------------- */
+.note-body .note-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.note-nav-prev,
+.note-nav-next {
+  display: flex;
+  flex-direction: column;
+}
+
+.note-nav-next {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.note-nav a {
+  text-decoration: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.25rem;
+  color: var(--muted);
+}
+
+.note-nav .nav-label {
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  display: block;
+}
+
+.note-nav .nav-title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--muted);
+  transition: color 0.1s;
+  display: block;
+}
+
+.note-nav a:hover .nav-title {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+}
+
+@media (max-width: 600px) {
+  .note-body .note-nav {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Similar Links Section
+--------------------------------------------------------------- */
+.similar-links-section {
+  margin-top: 5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+.similar-links-heading {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant: small-caps;
+  text-align: right;
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
+  color: var(--text);
+}
+
+.similar-links-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 3rem;
+  list-style: none;
+  padding: 0;
+}
+
+.similar-links-grid li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.similar-links-grid li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  color: var(--faint);
+  font-size: 0.8rem;
+  top: 0.1em;
+}
+
+.similar-links-grid a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--border);
+  transition: color 0.1s, border-color 0.1s;
+}
+
+.similar-links-grid a:hover {
+  color: var(--text);
+  border-bottom-color: var(--muted);
+}
+
+@media (max-width: 768px) {
+  .similar-links-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 .prose>*+* {
@@ -654,25 +792,29 @@ body {
 
 /* Section headings like Gwern — small-caps, centered h1 */
 .prose h1 {
-  font-size: 1.55rem;
-  font-weight: 400;
+  font-size: 1.6rem;
+  font-weight: 700;
   font-variant: small-caps;
   text-align: center;
-  padding-bottom: 0.2em;
+  padding-bottom: 0.1em;
   border-bottom: 1px solid var(--border);
-  margin: 2.5em 0 0.6em;
-  letter-spacing: 0.04em;
-  line-height: 1.2;
+  margin: 2.8em 0 1.2em;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 .prose h2 {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 700;
   font-variant: small-caps;
-  letter-spacing: 0.03em;
-  margin: 2.25em 0 0.45em;
-  line-height: 1.3;
+  letter-spacing: 0.06em;
+  margin: 2.5em 0 0.8em;
+  line-height: 1.2;
   text-align: left;
+  border-bottom: 1px solid var(--faint);
+  display: inline-block;
+  padding-right: 2em;
 }
 
 .prose h3 {
@@ -1178,69 +1320,10 @@ body {
     width: 34px;
     height: 34px;
   }
-/* ---------------------------------------------------------------
-   Note Navigation (Prev / Next)
---------------------------------------------------------------- */
-.note-nav {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 4rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
+
 }
 
-.note-nav-prev, .note-nav-next {
-  display: flex;
-  flex-direction: column;
-}
 
-.note-nav-next {
-  text-align: right;
-  align-items: flex-end;
-}
-
-.note-nav a {
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.note-nav .nav-label {
-  font-family: var(--sans);
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
-.note-nav .nav-title {
-  font-family: var(--serif);
-  font-size: 1.1rem;
-  color: var(--muted);
-  transition: color 0.1s;
-}
-
-.note-nav a:hover .nav-title {
-  color: var(--text);
-  text-decoration: underline;
-  text-decoration-color: var(--border);
-}
-
-@media (max-width: 600px) {
-  .note-nav {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
-
-  .settings-btn svg {
-    width: 18px;
-    height: 18px;
-  }
-}
 
 /* ---------------------------------------------------------------
    Reading Progress Bar
