@@ -3,7 +3,7 @@ title: "Fictional Bonds"
 date: 2025-05-18
 kind: prose
 stage: budding
-description: "On what holds friendships together when nothing else does — and what happens when the agreement quietly expires."
+description: "Friendship floats. It exists only if we keep saying it does."
 ---
 
 I could have nothing in common with someone I once shared everything with. It happens slowly like water forgetting the shape of the vessel it lived in.

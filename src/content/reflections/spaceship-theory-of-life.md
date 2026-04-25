@@ -3,7 +3,7 @@ title: "Spaceship Theory of Life"
 date: 2025-12-10
 kind: prose
 stage: budding
-description: "Graduating felt disorienting until I understood why: I'd been following levels on a spaceship someone else designed, and now I was outside it for the first time."
+description: "On graduating and realizing the structure was always a ship someone else built."
 ---
 
 I graduated a few weeks ago and felt completely lost. Then I understood why:
