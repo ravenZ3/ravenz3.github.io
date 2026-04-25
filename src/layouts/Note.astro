@@ -48,7 +48,7 @@ for (const h of headings) {
 ---
 <Base title={title} description={description} activeNav={note.collection}>
   <div class="sticky-header" id="sticky-header">
-    <div class="sticky-title">{title}</div>
+    <div class="sticky-title" id="sticky-title">{title}</div>
     <div class="sticky-progress-container">
       <div class="sticky-progress-bar" id="sticky-progress"></div>
     </div>
@@ -158,24 +158,63 @@ for (const h of headings) {
 <script>
   import '../scripts/sidenotes.js';
 
-  // Sticky Progress Header
+  // Sticky header: progress + current section tracking
   const stickyHeader = document.getElementById('sticky-header');
-  const progressBar = document.getElementById('sticky-progress');
-  
-  if (stickyHeader && progressBar) {
+  const stickyTitle  = document.getElementById('sticky-title');
+  const progressBar  = document.getElementById('sticky-progress');
+  const noteTitle    = document.querySelector('.note-title')?.textContent ?? '';
+
+  // Progress bar
+  if (progressBar) {
     window.addEventListener('scroll', () => {
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const winScroll = document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      
-      progressBar.style.width = scrolled + "%";
-      
-      // Show header after scrolling down 200px
+      progressBar.style.width = ((winScroll / height) * 100) + '%';
+
       if (winScroll > 200) {
-        stickyHeader.classList.add('visible');
+        stickyHeader?.classList.add('visible');
       } else {
-        stickyHeader.classList.remove('visible');
+        stickyHeader?.classList.remove('visible');
       }
+    }, { passive: true });
+  }
+
+  // Section tracking via IntersectionObserver
+  if (stickyTitle) {
+    const headings = Array.from(document.querySelectorAll('.prose h1, .prose h2, .prose h3'));
+    let activeHeading: Element | null = null;
+
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          activeHeading = entry.target;
+        }
+      }
+      // If we've scrolled past all headings, keep the last one
+      if (activeHeading) {
+        const depth = activeHeading.tagName;
+        let label = activeHeading.textContent ?? '';
+
+        // For h3, prefix with parent h2 title
+        if (depth === 'H3') {
+          const idx = headings.indexOf(activeHeading);
+          for (let i = idx - 1; i >= 0; i--) {
+            if (headings[i].tagName === 'H2') {
+              label = (headings[i].textContent ?? '') + ' › ' + label;
+              break;
+            }
+          }
+        }
+
+        stickyTitle.textContent = label || noteTitle;
+      } else {
+        stickyTitle.textContent = noteTitle;
+      }
+    }, {
+      rootMargin: '-10% 0px -80% 0px',
+      threshold: 0,
     });
+
+    headings.forEach(h => observer.observe(h));
   }
 </script>
