@@ -32,6 +32,8 @@ const navItems = [
     (function() {
       var t = localStorage.getItem('rz-theme');
       if (t) document.documentElement.setAttribute('data-theme', t);
+      var f = localStorage.getItem('rz-fontsize');
+      if (f) document.documentElement.style.fontSize = f + 'px';
     })();
   </script>
   <style is:global>
