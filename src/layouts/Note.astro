@@ -13,18 +13,18 @@ interface Props {
   note: GardenNote;
   backlinks: NoteRef[];
   headings: Heading[];
+  prev?: GardenNote | null;
+  next?: GardenNote | null;
 }
 
-const { note, backlinks, headings } = Astro.props;
+const { note, backlinks, headings, prev, next } = Astro.props;
 const { title, stage, tags, date, modified, kind, description, certainty, importance } = note.data;
 const isDropCap = kind === 'prose';
 
-const dateStr = date?.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })
-  ?.replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
-const modifiedStr = modified?.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })
-  ?.replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
+const dateStr = date?.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const modifiedStr = modified?.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-// Build numbered TOC — h2, h3, h4 (matching the Gwern depth shown in screenshots)
+// Build numbered TOC — h2, h3, h4
 interface TocItem { heading: Heading; label: string; }
 const tocItems: TocItem[] = [];
 let h2Count = 0;
@@ -48,6 +48,10 @@ for (const h of headings) {
 }
 ---
 <Base title={title} description={description} activeNav={note.collection}>
+  <div class="progress-container">
+    <div class="progress-bar" id="reading-progress"></div>
+  </div>
+
   <div class="note-layout">
 
     <!-- Left sidebar: TOC -->
@@ -86,29 +90,19 @@ for (const h of headings) {
         {description && <p class="note-description">{description}</p>}
 
         <p class="note-meta">
-          {dateStr && (
-            <>
-              <span class="note-meta-dates">
-                {dateStr}{modifiedStr && modifiedStr !== dateStr && (
-                  <> – {modifiedStr}</>
-                )}
-              </span>
-              <span class="sep">·</span>
-            </>
-          )}
-          <span>{STAGE_LABEL[stage]}</span>
-          <span class="stage-dot"> {STAGE_SYMBOL[stage]}</span>
+          <span class="note-meta-dates">
+            {dateStr}{modifiedStr && modifiedStr !== dateStr && (
+              <> (updated {modifiedStr})</>
+            )}
+          </span>
+          <span class="sep">·</span>
+          <span class="note-meta-stage" title={`Stage: ${STAGE_LABEL[stage]}`}>
+            {STAGE_SYMBOL[stage]} {stage}
+          </span>
           {certainty && (
             <>
               <span class="sep">·</span>
-              <span class="note-meta-certainty" title="How confident the author is in the claims here">↓certainty: {certainty}</span>
-              <span>{'\u25CB'}</span>
-            </>
-          )}
-          {importance !== undefined && (
-            <>
-              <span class="sep">·</span>
-              <span class="note-meta-importance" title="How important the author thinks this note is (0–10)">↓importance: {importance}</span>
+              <span class="note-meta-certainty" title="Epistemic certainty">{certainty}</span>
             </>
           )}
         </p>
@@ -117,11 +111,32 @@ for (const h of headings) {
       <div class:list={['prose', isDropCap && 'drop-cap']}>
         <slot />
       </div>
+
+      <!-- Navigation: Prev / Next -->
+      {(prev || next) && (
+        <nav class="note-nav" aria-label="Note navigation">
+          <div class="note-nav-prev">
+            {prev && (
+              <a href={noteUrl(prev.collection as GardenCollection, prev.slug)}>
+                <span class="nav-label">Previous</span>
+                <span class="nav-title">{prev.data.title}</span>
+              </a>
+            )}
+          </div>
+          <div class="note-nav-next">
+            {next && (
+              <a href={noteUrl(next.collection as GardenCollection, next.slug)}>
+                <span class="nav-label">Next</span>
+                <span class="nav-title">{next.data.title}</span>
+              </a>
+            )}
+          </div>
+        </nav>
+      )}
     </div>
 
     <!-- Right sidebar: sidenotes + backlinks -->
     <aside class="note-sidebar-right">
-      <!-- Sidenote items injected here by sidenotes.js -->
       <div class="sidenote-column" id="sidenote-column"></div>
 
       {backlinks.length > 0 && (
@@ -145,7 +160,16 @@ for (const h of headings) {
 </Base>
 
 <script>
-  // Import the sidenotes script inline for this page
-  // (We need access to DOM, so this runs client-side)
   import '../scripts/sidenotes.js';
+
+  // Reading progress bar
+  const progressBar = document.getElementById('reading-progress');
+  if (progressBar) {
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      progressBar.style.width = scrolled + "%";
+    });
+  }
 </script>

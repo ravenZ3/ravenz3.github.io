@@ -8,18 +8,32 @@ export async function getStaticPaths() {
     buildBacklinkIndex(),
   ]);
 
-  return notes.map(note => ({
-    params: { collection: note.collection, slug: note.slug },
-    props: {
-      note,
-      backlinks: backlinkIndex.get(note.slug) ?? [],
-    },
-  }));
+  // Sort notes by date descending (newest first)
+  const sortedNotes = [...notes].sort((a, b) => {
+    const da = a.data.date?.getTime() ?? 0;
+    const db = b.data.date?.getTime() ?? 0;
+    return db - da;
+  });
+
+  return sortedNotes.map(note => {
+    const collectionNotes = sortedNotes.filter(n => n.collection === note.collection);
+    const cIndex = collectionNotes.findIndex(n => n.slug === note.slug);
+
+    return {
+      params: { collection: note.collection, slug: note.slug },
+      props: {
+        note,
+        backlinks: backlinkIndex.get(note.slug) ?? [],
+        prev: collectionNotes[cIndex + 1] ?? null, // older
+        next: collectionNotes[cIndex - 1] ?? null, // newer
+      },
+    };
+  });
 }
 
-const { note, backlinks } = Astro.props;
+const { note, backlinks, prev, next } = Astro.props;
 const { Content, headings } = await (note as any).render();
 ---
-<Note note={note} backlinks={backlinks} headings={headings}>
+<Note note={note} backlinks={backlinks} headings={headings} prev={prev} next={next}>
   <Content />
 </Note>
