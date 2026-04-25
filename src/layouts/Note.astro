@@ -48,7 +48,8 @@ for (const h of headings) {
 ---
 <Base title={title} description={description} activeNav={note.collection}>
   <div class="sticky-header" id="sticky-header">
-    <div class="sticky-title" id="sticky-title">{title}</div>
+    <div class="sticky-title">{title}</div>
+    <div class="sticky-section" id="sticky-section"></div>
     <div class="sticky-progress-container">
       <div class="sticky-progress-bar" id="sticky-progress"></div>
     </div>
@@ -160,9 +161,7 @@ for (const h of headings) {
 
   // Sticky header: progress + current section tracking
   const stickyHeader = document.getElementById('sticky-header');
-  const stickyTitle  = document.getElementById('sticky-title');
   const progressBar  = document.getElementById('sticky-progress');
-  const noteTitle    = document.querySelector('.note-title')?.textContent ?? '';
 
   // Progress bar
   if (progressBar) {
@@ -180,40 +179,41 @@ for (const h of headings) {
   }
 
   // Section tracking via IntersectionObserver
-  if (stickyTitle) {
+  const stickySection = document.getElementById('sticky-section');
+
+  if (stickySection) {
     const headings = Array.from(document.querySelectorAll('.prose h1, .prose h2, .prose h3'));
     let activeHeading: Element | null = null;
 
     const observer = new IntersectionObserver(entries => {
       for (const entry of entries) {
-        if (entry.isIntersecting) {
-          activeHeading = entry.target;
-        }
+        if (entry.isIntersecting) activeHeading = entry.target;
       }
-      // If we've scrolled past all headings, keep the last one
-      if (activeHeading) {
-        const depth = activeHeading.tagName;
-        let label = activeHeading.textContent ?? '';
 
-        // For h3, prefix with parent h2 title
-        if (depth === 'H3') {
+      if (activeHeading) {
+        const tag = activeHeading.tagName;
+        const text = activeHeading.textContent ?? '';
+        let label = '';
+
+        if (tag === 'H3') {
           const idx = headings.indexOf(activeHeading);
           for (let i = idx - 1; i >= 0; i--) {
             if (headings[i].tagName === 'H2') {
-              label = (headings[i].textContent ?? '') + ' › ' + label;
+              label = (headings[i].textContent ?? '') + ' › ' + text;
               break;
             }
           }
+          if (!label) label = text;
+        } else {
+          label = text;
         }
 
-        stickyTitle.textContent = label || noteTitle;
+        stickySection.textContent = label;
+        stickySection.style.display = 'block';
       } else {
-        stickyTitle.textContent = noteTitle;
+        stickySection.style.display = 'none';
       }
-    }, {
-      rootMargin: '-10% 0px -80% 0px',
-      threshold: 0,
-    });
+    }, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
 
     headings.forEach(h => observer.observe(h));
   }
