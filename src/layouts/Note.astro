@@ -195,6 +195,7 @@ for (const h of headings) {
         else break;
       }
 
+      let newHTML = '';
       if (active) {
         const tag = active.tagName;
         const text = active.textContent ?? '';
@@ -208,16 +209,21 @@ for (const h of headings) {
               break;
             }
           }
-          stickySection.innerHTML = parentText
+          newHTML = parentText
             ? `<span>${parentText}</span><span class="sticky-subsection">${text}</span>`
             : `<span>${text}</span>`;
         } else {
-          stickySection.innerHTML = `<span>${text}</span>`;
+          newHTML = `<span>${text}</span>`;
         }
+      }
 
-        stickySection.style.display = 'flex';
-      } else {
-        stickySection.style.display = 'none';
+      if (stickySection.innerHTML !== newHTML) {
+        stickySection.classList.add('fade');
+        setTimeout(() => {
+          stickySection.innerHTML = newHTML;
+          stickySection.style.display = newHTML ? 'flex' : 'none';
+          stickySection.classList.remove('fade');
+        }, 200);
       }
     }
 

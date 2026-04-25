@@ -1235,6 +1235,11 @@ body {
   color: var(--muted);
   line-height: 1.3;
   margin-top: 0.2rem;
+  transition: opacity 0.2s ease;
+}
+
+.sticky-section.fade {
+  opacity: 0;
 }
 
 .sticky-subsection {
