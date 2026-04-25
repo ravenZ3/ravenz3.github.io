@@ -34,6 +34,8 @@ const navItems = [
       if (t) document.documentElement.setAttribute('data-theme', t);
       var f = localStorage.getItem('rz-fontsize');
       if (f) document.documentElement.style.fontSize = f + 'px';
+      var c = localStorage.getItem('rz-contrast');
+      if (c) document.documentElement.setAttribute('data-contrast', c);
     })();
   </script>
   <style is:global>
@@ -131,6 +133,24 @@ const navItems = [
 
     <div class="settings-divider settings-secondary"></div>
 
+    <!-- Contrast decrease -->
+    <button class="settings-btn settings-secondary" id="btn-contrast-down" title="Lower contrast">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+        <circle cx="12" cy="12" r="5" fill="currentColor" opacity="0.4"/>
+      </svg>
+    </button>
+
+    <!-- Contrast increase -->
+    <button class="settings-btn settings-secondary" id="btn-contrast-up" title="Higher contrast">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+        <circle cx="12" cy="12" r="5" fill="currentColor"/>
+      </svg>
+    </button>
+
+    <div class="settings-divider settings-secondary"></div>
+
     <!-- TOC toggle (mobile) -->
     <button class="settings-btn" id="btn-toc" title="Table of contents">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -205,6 +225,39 @@ const navItems = [
       fontSize = Math.max(fontSize - 1, 15);
       document.documentElement.style.fontSize = fontSize + 'px';
       localStorage.setItem(FONT_STORAGE, String(fontSize));
+    });
+
+    // ── Contrast adjustment ───────────────────────────────────────
+    const CONTRAST_KEY = 'rz-contrast';
+    const CONTRAST_LEVELS = [
+      { text: '#a09a90', muted: '#807a70', faint: '#5a5650', link: '#8a8070', accent: '#9a8a78' },  // -2  low
+      { text: '#c0bab0', muted: '#a09a8e', faint: '#706b62', link: '#9a9080', accent: '#b0a090' },  // -1
+      { text: '#e0dad0', muted: '#c8c3b8', faint: '#958f85', link: '#b0a898', accent: '#c8b8a8' },  //  0  default
+      { text: '#f5f0e8', muted: '#e8e3d8', faint: '#c8c0b5', link: '#ddd5c8', accent: '#eee5d8' },  // +1
+      { text: '#ffffff', muted: '#f0f0f0', faint: '#e0e0e0', link: '#ffffff', accent: '#ffffff' },  // +2  high
+    ];
+    let contrastLevel = parseInt(localStorage.getItem(CONTRAST_KEY) || '2', 10);
+
+    function applyContrast(level: number) {
+      contrastLevel = Math.max(0, Math.min(level, CONTRAST_LEVELS.length - 1));
+      const c = CONTRAST_LEVELS[contrastLevel];
+      root.style.setProperty('--text', c.text);
+      root.style.setProperty('--muted', c.muted);
+      root.style.setProperty('--faint', c.faint);
+      root.style.setProperty('--link', c.link);
+      root.style.setProperty('--accent', c.accent);
+      root.setAttribute('data-contrast', String(contrastLevel));
+      localStorage.setItem(CONTRAST_KEY, String(contrastLevel));
+    }
+
+    // Apply saved contrast on load
+    applyContrast(contrastLevel);
+
+    document.getElementById('btn-contrast-up')?.addEventListener('click', () => {
+      applyContrast(contrastLevel + 1);
+    });
+    document.getElementById('btn-contrast-down')?.addEventListener('click', () => {
+      applyContrast(contrastLevel - 1);
     });
 
     // ── Settings panel toggle (gear) ──────────────────────────────
