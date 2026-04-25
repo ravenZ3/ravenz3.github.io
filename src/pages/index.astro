@@ -17,23 +17,22 @@ function chunk<T>(arr: T[], size: number): T[][] {
 // But the user's screenshot 113 shows "NEWEST", "POPULAR", "NOTABLE".
 // Your site has Literary, Perspectives, Reflections.
 
+const PREVIEW = 3;
+
 const newestNotes = [...allNotes]
   .filter(n => n.data.date)
   .sort((a, b) => b.data.date!.getTime() - a.data.date!.getTime())
-  .slice(0, 12);
+  .slice(0, PREVIEW);
 
-const literary = allNotes.filter(n => n.collection === 'literary').slice(0, 12);
-const perspectives = allNotes.filter(n => n.collection === 'perspectives').slice(0, 12);
-const reflections = allNotes.filter(n => n.collection === 'reflections').slice(0, 12);
-const finance = allNotes.filter(n => n.collection === 'finance').slice(0, 12);
+const literary = allNotes.filter(n => n.collection === 'literary').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
+const perspectives = allNotes.filter(n => n.collection === 'perspectives').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
+const reflections = allNotes.filter(n => n.collection === 'reflections').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 
-// Grouping into rows of up to 3 categories each
 const categories = [
-  { title: 'Newest', notes: newestNotes },
-  { title: 'Literary', notes: literary },
-  { title: 'Perspectives', notes: perspectives },
-  { title: 'Reflections', notes: reflections },
-  { title: 'Finance', notes: finance },
+  { title: 'Newest',       href: null,             notes: newestNotes,              total: allNotes.filter(n => n.data.date).length },
+  { title: 'Literary',     href: '/literary',      notes: literary.slice(0,PREVIEW),     total: literary.length },
+  { title: 'Perspectives', href: '/perspectives',  notes: perspectives.slice(0,PREVIEW), total: perspectives.length },
+  { title: 'Reflections',  href: '/reflections',   notes: reflections.slice(0,PREVIEW),  total: reflections.length },
 ];
 
 const categoryRows = chunk(categories, 3);
@@ -74,7 +73,11 @@ const categoryRows = chunk(categories, 3);
         <div class="category-row">
           {row.map(cat => (
             <section class="category-col">
-              <h2 class="category-title">{cat.title}</h2>
+              <h2 class="category-title">
+                {cat.href
+                  ? <a href={cat.href}>{cat.title}</a>
+                  : cat.title}
+              </h2>
               <ul class="category-list">
                 {cat.notes.map(note => (
                   <li data-stage={note.data.stage ?? 'seedling'}>
@@ -83,6 +86,9 @@ const categoryRows = chunk(categories, 3);
                   </li>
                 ))}
               </ul>
+              {cat.href && cat.total > PREVIEW && (
+                <a href={cat.href} class="category-more">···  {cat.total - PREVIEW} more</a>
+              )}
             </section>
           ))}
           {row.length < 3 && [...Array(3 - row.length)].map(() => <div class="category-col empty"></div>)}
@@ -158,6 +164,34 @@ const categoryRows = chunk(categories, 3);
   margin-bottom: 1rem;
   color: var(--text);
   text-align: center;
+}
+
+.category-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.category-title a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 3px;
+}
+
+.category-more {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--faint);
+  text-decoration: none;
+  text-align: center;
+  letter-spacing: 0.03em;
+  transition: color 0.1s;
+}
+
+.category-more:hover {
+  color: var(--muted);
 }
 
 .category-list {
