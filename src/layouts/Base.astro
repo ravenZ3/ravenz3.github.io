@@ -241,6 +241,8 @@ const navItems = [
       document.querySelectorAll('.settings-btn[data-theme-target]').forEach(b => {
         (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.themeTarget === t);
       });
+      // Re-apply contrast for the new theme
+      applyContrast(contrastLevel);
     }
 
     document.querySelectorAll('.settings-btn[data-theme-target]').forEach(btn => {
@@ -274,18 +276,45 @@ const navItems = [
 
     // ── Contrast adjustment ───────────────────────────────────────
     const CONTRAST_KEY = 'rz-contrast';
-    const CONTRAST_LEVELS = [
-      { text: '#a09a90', muted: '#807a70', faint: '#5a5650', link: '#8a8070', accent: '#9a8a78' },  // -2  low
-      { text: '#c0bab0', muted: '#a09a8e', faint: '#706b62', link: '#9a9080', accent: '#b0a090' },  // -1
-      { text: '#e0dad0', muted: '#c8c3b8', faint: '#958f85', link: '#b0a898', accent: '#c8b8a8' },  //  0  default
-      { text: '#f5f0e8', muted: '#e8e3d8', faint: '#c8c0b5', link: '#ddd5c8', accent: '#eee5d8' },  // +1
-      { text: '#ffffff', muted: '#f0f0f0', faint: '#e0e0e0', link: '#ffffff', accent: '#ffffff' },  // +2  high
-    ];
+
+    type ContrastLevel = { text: string; muted: string; faint: string; link: string; accent: string };
+
+    const THEME_CONTRAST: Record<string, ContrastLevel[]> = {
+      dark: [
+        { text: '#a09a90', muted: '#807a70', faint: '#5a5650', link: '#8a8070', accent: '#9a8a78' },
+        { text: '#c0bab0', muted: '#a09a8e', faint: '#706b62', link: '#9a9080', accent: '#b0a090' },
+        { text: '#e0dad0', muted: '#c8c3b8', faint: '#958f85', link: '#b0a898', accent: '#c8b8a8' },
+        { text: '#f5f0e8', muted: '#e8e3d8', faint: '#c8c0b5', link: '#ddd5c8', accent: '#eee5d8' },
+        { text: '#ffffff', muted: '#f0f0f0', faint: '#e0e0e0', link: '#ffffff', accent: '#ffffff' },
+      ],
+      light: [
+        { text: '#6a6458', muted: '#8a8478', faint: '#b0a898', link: '#7a7060', accent: '#8a7a68' },
+        { text: '#3a3428', muted: '#6a6050', faint: '#9a9488', link: '#4a4030', accent: '#6a5a48' },
+        { text: '#111111', muted: '#4a4438', faint: '#8a8478', link: '#2a2018', accent: '#5a4a38' },
+        { text: '#050505', muted: '#2a2418', faint: '#6a6458', link: '#151008', accent: '#3a2a18' },
+        { text: '#000000', muted: '#101010', faint: '#404040', link: '#000000', accent: '#000000' },
+      ],
+      sepia: [
+        { text: '#7a6a58', muted: '#9a8a78', faint: '#c0b0a0', link: '#8a7860', accent: '#a08868' },
+        { text: '#4a3a28', muted: '#7a6a58', faint: '#b0a090', link: '#6a5838', accent: '#907048' },
+        { text: '#2a2010', muted: '#6a5a48', faint: '#a09080', link: '#4a3820', accent: '#8a6a48' },
+        { text: '#181008', muted: '#4a3a28', faint: '#807060', link: '#2a1810', accent: '#6a4a28' },
+        { text: '#000000', muted: '#1a1008', faint: '#504030', link: '#000000', accent: '#000000' },
+      ],
+    };
+
     let contrastLevel = parseInt(localStorage.getItem(CONTRAST_KEY) || '2', 10);
 
+    function getCurrentTheme(): string {
+      return root.getAttribute('data-theme') ||
+        (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    }
+
     function applyContrast(level: number) {
-      contrastLevel = Math.max(0, Math.min(level, CONTRAST_LEVELS.length - 1));
-      const c = CONTRAST_LEVELS[contrastLevel];
+      const theme = getCurrentTheme();
+      const levels = THEME_CONTRAST[theme] || THEME_CONTRAST.dark;
+      contrastLevel = Math.max(0, Math.min(level, levels.length - 1));
+      const c = levels[contrastLevel];
       root.style.setProperty('--text', c.text);
       root.style.setProperty('--muted', c.muted);
       root.style.setProperty('--faint', c.faint);
