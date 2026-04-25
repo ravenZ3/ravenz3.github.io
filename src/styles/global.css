@@ -6,6 +6,12 @@
   navigation: none;
 }
 
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation: none !important;
+}
+
 /* ---------------------------------------------------------------
    Tokens — dark (blackboard) as default, paper via [data-theme=light]
 --------------------------------------------------------------- */
