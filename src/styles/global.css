@@ -2,6 +2,10 @@
    Google Fonts import (loaded via Base.astro link tags)
 --------------------------------------------------------------- */
 
+@view-transition {
+  navigation: none;
+}
+
 /* ---------------------------------------------------------------
    Tokens — dark (blackboard) as default, paper via [data-theme=light]
 --------------------------------------------------------------- */
