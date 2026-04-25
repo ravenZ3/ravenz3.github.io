@@ -178,34 +178,36 @@ for (const h of headings) {
     }, { passive: true });
   }
 
-  // Section tracking via IntersectionObserver
+  // Section tracking: find the last heading above the viewport midpoint on every scroll
   const stickySection = document.getElementById('sticky-section');
 
   if (stickySection) {
-    const headings = Array.from(document.querySelectorAll('.prose h1, .prose h2, .prose h3'));
-    let activeHeading: Element | null = null;
+    const headings = Array.from(
+      document.querySelectorAll<HTMLElement>('.prose h1, .prose h2, .prose h3')
+    );
 
-    const observer = new IntersectionObserver(entries => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) activeHeading = entry.target;
+    function updateSection() {
+      const mid = window.scrollY + window.innerHeight * 0.25;
+      let active: HTMLElement | null = null;
+
+      for (const h of headings) {
+        if (h.offsetTop <= mid) active = h;
+        else break;
       }
 
-      if (activeHeading) {
-        const tag = activeHeading.tagName;
-        const text = activeHeading.textContent ?? '';
-        let label = '';
+      if (active) {
+        const tag = active.tagName;
+        const text = active.textContent ?? '';
+        let label = text;
 
         if (tag === 'H3') {
-          const idx = headings.indexOf(activeHeading);
+          const idx = headings.indexOf(active);
           for (let i = idx - 1; i >= 0; i--) {
             if (headings[i].tagName === 'H2') {
               label = (headings[i].textContent ?? '') + ' › ' + text;
               break;
             }
           }
-          if (!label) label = text;
-        } else {
-          label = text;
         }
 
         stickySection.textContent = label;
@@ -213,8 +215,9 @@ for (const h of headings) {
       } else {
         stickySection.style.display = 'none';
       }
-    }, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
+    }
 
-    headings.forEach(h => observer.observe(h));
+    window.addEventListener('scroll', updateSection, { passive: true });
+    updateSection();
   }
 </script>
