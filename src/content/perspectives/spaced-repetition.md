@@ -4,7 +4,7 @@ stage: budding
 tags: [algorithms, memory, papers]
 kind: essay
 date: 2025-09-14
-description: From Ebbinghaus to FSRS — working through the foundational papers on why spacing your reviews works, and when.
+description: Working through the foundational papers on why spacing your reviews works, and when.
 ---
 
 There is an exact time when you should revise a concept after you've learned it. Revising at the moment your brain is about to forget ensures recall probability increases, extending the next forgetting-gap interval.
