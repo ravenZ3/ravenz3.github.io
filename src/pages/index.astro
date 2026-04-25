@@ -25,6 +25,7 @@ const newestNotes = [...allNotes]
 const literary = allNotes.filter(n => n.collection === 'literary').slice(0, 12);
 const perspectives = allNotes.filter(n => n.collection === 'perspectives').slice(0, 12);
 const reflections = allNotes.filter(n => n.collection === 'reflections').slice(0, 12);
+const finance = allNotes.filter(n => n.collection === 'finance').slice(0, 12);
 
 // Grouping into rows of up to 3 categories each
 const categories = [
@@ -32,6 +33,7 @@ const categories = [
   { title: 'Literary', notes: literary },
   { title: 'Perspectives', notes: perspectives },
   { title: 'Reflections', notes: reflections },
+  { title: 'Finance', notes: finance },
 ];
 
 const categoryRows = chunk(categories, 3);
