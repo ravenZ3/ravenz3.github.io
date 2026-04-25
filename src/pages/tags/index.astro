@@ -13,7 +13,7 @@ for (const note of allNotes) {
 
 const tags = [...tagMap.entries()].sort((a, b) => a[0].localeCompare(b[0]));
 ---
-<Base title="Tags" activeNav="tags">
+<Base title="Tags" description={`Browse all ${tags.length} tags across the garden — a cross-collection index of topics and themes.`} activeNav="tags">
   <div class="container">
 
     <header class="tags-header">

@@ -3,12 +3,33 @@ interface Props {
   title: string;
   description?: string;
   activeNav?: string;
+  canonicalUrl?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
 }
 
-const { title, description, activeNav } = Astro.props;
+const { title, description, activeNav, canonicalUrl, ogType, publishedTime, modifiedTime, tags } = Astro.props;
 const siteName = 'ravenZ3';
 const pageTitle = title === siteName ? siteName : `${title} · ${siteName}`;
 const defaultDesc = 'A digital garden of notes in various stages — prose, perspectives, and reflections by Ramjan Khandelwal.';
+const siteUrl = 'https://ravenz3.github.io';
+const resolvedCanonical = canonicalUrl ?? Astro.url.href;
+const resolvedDesc = description ?? defaultDesc;
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteName,
+  url: siteUrl,
+  description: defaultDesc,
+  author: {
+    '@type': 'Person',
+    name: 'Ramjan Khandelwal',
+    url: `${siteUrl}/about`,
+  },
+};
 
 const navItems = [
   { label: 'Literary',     href: '/literary' },
@@ -22,8 +43,32 @@ const navItems = [
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content={description ?? defaultDesc} />
+  <meta name="description" content={resolvedDesc} />
+  <meta name="author" content="Ramjan Khandelwal" />
   <title>{pageTitle}</title>
+  <link rel="canonical" href={resolvedCanonical} />
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content={siteName} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={resolvedDesc} />
+  <meta property="og:url" content={resolvedCanonical} />
+  <meta property="og:type" content={ogType ?? 'website'} />
+  {ogType === 'article' && publishedTime && <meta property="article:published_time" content={publishedTime} />}
+  {ogType === 'article' && modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+  {ogType === 'article' && tags?.map(tag => <meta property="article:tag" content={tag} />)}
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={resolvedDesc} />
+
+  <!-- JSON-LD: WebSite -->
+  <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
+
+  <!-- Per-page head injection -->
+  <slot name="head" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />

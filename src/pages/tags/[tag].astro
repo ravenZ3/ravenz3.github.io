@@ -23,7 +23,7 @@ export async function getStaticPaths() {
 
 const { tag, notes } = Astro.props;
 ---
-<Base title={`#${tag}`} activeNav="tags">
+<Base title={`#${tag}`} description={`${notes.length} note${notes.length !== 1 ? 's' : ''} tagged "${tag}" in the ravenZ3 digital garden.`} activeNav="tags">
   <div class="container">
 
     <header class="tag-header">

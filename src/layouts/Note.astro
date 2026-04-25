@@ -23,6 +23,35 @@ const formatDate = (d: Date | undefined) => d?.toISOString().split('T')[0];
 const dateStr = formatDate(date);
 const modifiedStr = formatDate(modified);
 
+const siteUrl = 'https://ravenz3.github.io';
+const noteCanonical = `${siteUrl}/${note.collection}/${note.slug}`;
+
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description: description ?? '',
+  url: noteCanonical,
+  author: {
+    '@type': 'Person',
+    name: 'Ramjan Khandelwal',
+    url: `${siteUrl}/about`,
+  },
+  ...(date ? { datePublished: date.toISOString() } : {}),
+  ...(modified ? { dateModified: modified.toISOString() } : date ? { dateModified: date.toISOString() } : {}),
+  keywords: tags?.join(', ') ?? '',
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: note.collection, item: `${siteUrl}/${note.collection}` },
+    { '@type': 'ListItem', position: 3, name: title, item: noteCanonical },
+  ],
+};
+
 // Build numbered TOC — h2, h3, h4
 interface TocItem { heading: Heading; label: string; }
 const tocItems: TocItem[] = [];
@@ -46,7 +75,20 @@ for (const h of headings) {
   }
 }
 ---
-<Base title={title} description={description} activeNav={note.collection}>
+<Base
+  title={title}
+  description={description}
+  activeNav={note.collection}
+  canonicalUrl={noteCanonical}
+  ogType="article"
+  publishedTime={date?.toISOString()}
+  modifiedTime={(modified ?? date)?.toISOString()}
+  tags={tags}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+  </Fragment>
   <div class="sticky-header" id="sticky-header">
     <div class="sticky-title">{title}</div>
     <div class="sticky-section" id="sticky-section"></div>
