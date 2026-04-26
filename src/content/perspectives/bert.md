@@ -14,7 +14,7 @@ The previous autoregressive models predicted the next word based on the previous
 > "The animal didn't cross the road because it was too tired."
 > "The animal didn't cross the road because it was too wide."
 
-The word "it" is easy enough for the model to generate. But the model builds a poor *representation* of what "it" refers to  - it could be the animal or the road. The ambiguity only resolves with the words that come *after*: 'tired' points to the animal, 'wide' points to the road.
+The word "it" is easy enough for the model to generate. But the model builds a poor *representation* of what "it" refers to: it could be the animal or the road. The ambiguity only resolves with the words that come *after*: 'tired' points to the animal, 'wide' points to the road.
 
 So we have isolated the problem to the ambiguity of reference. When we are looking from left to right we are left with the ambiguity of the future tokens. Similarly, when we are looking from right to left we are left with the ambiguity of the past tokens.
 
@@ -30,7 +30,7 @@ In BERT's self-attention, when building the representation for "it", the model a
 
 ### Why not just remove GPT's mask?
 
-Why can we not use a single model that sees everything at once? Simply remove the causal masking so every token can attend to every other token, and train it to predict the next word  -
+Why can we not use a single model that sees everything at once? Simply remove the causal masking so every token can attend to every other token, and train it to predict the next word:
 
 Except that is straight up *cheating*. Without causal masking, every token position can directly see its own answer sitting right there in the input. The model just learns to copy. The loss drops to zero, it learns nothing useful.
 
@@ -62,4 +62,22 @@ How does BERT know which word belongs to which sentence if they are in one big l
 - **Segment**: Which sentence (A or B) it belongs to.
 
 Combined, these allow BERT to "feel" the structure of the input and reason about how the two sentences relate.
+
+## Architecture: The "Meaning Refinery"
+BERT-Base consists of **12 Transformer layers** (or "floors"). As a word passes through these layers, it becomes increasingly contextualized.
+- **Layers 1-4**: Basic syntax and parts of speech.
+- **Layers 5-8**: Structural relationships.
+- **Layers 9-12**: High-level semantic resolution (the "it" reference).
+
+Each layer uses **Multi-Head Attention** (12 heads), which are like specialists looking at the same sentence for different features: grammar, references, and topics simultaneously.
+
+## Fine-tuning: The Specialist
+The true power of BERT is **Transfer Learning**. Just as a medical resident completes years of general school before specializing, BERT is "pre-trained" on the history of human language once and then specialized ("fine-tuned") for specific tasks.
+
+By plugging a tiny new "Head" on top of the `[CLS]` token and training for just a few minutes, BERT can become an expert at:
+- **Sentiment Analysis**: "Is this review happy?"
+- **Question Answering**: "Where is the answer in this text?"
+- **Named Entity Recognition**: "Which words are people or places?"
+
+You download the brain, add the specialist head, and stand on the shoulders of a giant.
 
