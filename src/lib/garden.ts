@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 
-export const COLLECTIONS = ['literary', 'perspectives', 'reflections', 'finance'] as const;
+export const COLLECTIONS = ['literary', 'perspectives', 'reflections', 'finance', 'papers'] as const;
 export type GardenCollection = typeof COLLECTIONS[number];
 
 export interface NoteRef {
@@ -11,17 +11,19 @@ export interface NoteRef {
 
 // All notes across all collections, each tagged with which collection it's from.
 export async function getAllNotes() {
-  const [literary, perspectives, reflections, finance] = await Promise.all([
+  const [literary, perspectives, reflections, finance, papers] = await Promise.all([
     getCollection('literary'),
     getCollection('perspectives'),
     getCollection('reflections'),
     getCollection('finance'),
+    getCollection('papers'),
   ]);
   return [
     ...literary.map(e     => ({ ...e, collection: 'literary'     as const })),
     ...perspectives.map(e => ({ ...e, collection: 'perspectives' as const })),
     ...reflections.map(e  => ({ ...e, collection: 'reflections'  as const })),
     ...finance.map(e      => ({ ...e, collection: 'finance'      as const })),
+    ...papers.map(e       => ({ ...e, collection: 'papers'       as const })),
   ];
 }
 
@@ -31,7 +33,7 @@ export type GardenNote = Awaited<ReturnType<typeof getAllNotes>>[number];
 //   [text](/literary/slug)  [text](/perspectives/slug)  [text](/reflections/slug)
 // Returns the slugs of all linked notes.
 function extractInternalLinks(body: string): string[] {
-  const pattern = /\[([^\]]+)\]\(\/(literary|perspectives|reflections|finance)\/([^)#?\s/]+)\)/g;
+  const pattern = /\[([^\]]+)\]\(\/(literary|perspectives|reflections|finance|papers)\/([^)#?\s/]+)\)/g;
   const slugs: string[] = [];
   let m: RegExpExecArray | null;
   while ((m = pattern.exec(body)) !== null) {

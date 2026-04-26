@@ -23,4 +23,5 @@ export const collections = {
   perspectives: defineCollection({ type: 'content', schema: noteSchema }),
   reflections:  defineCollection({ type: 'content', schema: noteSchema }),
   finance:      defineCollection({ type: 'content', schema: noteSchema }),
+  papers:       defineCollection({ type: 'content', schema: noteSchema }),
 };

@@ -26,12 +26,14 @@ const newestNotes = [...allNotes]
 const literary = allNotes.filter(n => n.collection === 'literary').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 const perspectives = allNotes.filter(n => n.collection === 'perspectives').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 const reflections = allNotes.filter(n => n.collection === 'reflections').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
+const papers = allNotes.filter(n => n.collection === 'papers').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 
 const categories = [
   { title: 'Newest',       href: null,             notes: newestNotes },
   { title: 'Literary',     href: '/literary',      notes: literary },
   { title: 'Perspectives', href: '/perspectives',  notes: perspectives },
   { title: 'Reflections',  href: '/reflections',   notes: reflections },
+  { title: 'Papers',       href: '/papers',        notes: papers },
 ];
 
 const featuredNotes = allNotes
@@ -40,7 +42,7 @@ const featuredNotes = allNotes
     if (a.data.date && b.data.date) return b.data.date.getTime() - a.data.date.getTime();
     return 0;
   })
-  .slice(0, 3);
+  .slice(0, 1);
 
 const categoryRows = chunk(categories, 3);
 const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });

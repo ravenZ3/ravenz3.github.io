@@ -1,9 +1,9 @@
 ---
 title: "BERT"
-stage: seedling
+stage: evergreen
 tags: [papers, nlp]
 kind: note
-date: 2024-09-23
+date: 2026-04-26
 description: Understanding what bidirectional pretraining actually does and why it matters.
 ---
 
@@ -79,22 +79,21 @@ By plugging a tiny new "Head" on top of the `[CLS]` token and training for just 
 - **Question Answering**: "Where is the answer in this text?"
 - **Named Entity Recognition**: "Which words are people or places?"
 
-you can simply download the model and plug a head and suddenly you have an expert doing the task for you.
+You can simply download the model, plug a head on top, and suddenly you have an expert doing the task for you.
 
 ## Downfall
- - BERT is quite good at what it does but it has a limitaion by its bidirectional nature. It can not generate. Even if it wanted to generate the first word of the story, it would need to see the next words to do so.
-It just can't start.
 
- *`but still bert is like a brilliant critic but it can't write the book for you. It can tell you prefect facts about it but writing but a vol ii is not in its abilities.`*
+- BERT is quite good at what it does, but it has a limitation by its bidirectional nature. It cannot generate. Even if it wanted to generate the first word of a story, it would need to see the next words to do so. It just can't start.
 
- - BERT is not a generative model. It is a discriminative model. GPT styled models function by given a certain sets of words, what will be the next word?
- It turns out instruction following is not very differnt from the next-word task. And because it can genereate tokens one after another, it can chat. You can't do that with bert in a natural manner.
+  *BERT is like a brilliant critic who can't write the book for you. It can tell you precise facts about a text, but a volume II is not within its abilities.*
 
- - Scaling
- When we scaled gpt to billions of parameters, something magical happened~ it become so good at predicting the next word that it accidently learned how to reason, write code, and follow complex logic without ever being explicitly fine tuned for it. 
- 
- ## epilouge
- BERT is still used in critial infrastructure like spam classification or google search (research req.).
- But the frontend of AI has shifted to autoregressors like GPT and Claude.
-> "Creation is more important than classification." 
+- BERT is not a generative model — it is a discriminative model. GPT-style models function by asking: given a certain set of words, what will the next word be? It turns out instruction-following is not very different from the next-word task. And because it can generate tokens one after another, it can chat. You can't do that with BERT in any natural manner.
+
+- Scaling: when GPT was scaled to billions of parameters, something unexpected happened. It became so good at predicting the next word that it incidentally learned how to reason, write code, and follow complex logic — without ever being explicitly fine-tuned for it.
+
+## Epilogue
+
+BERT is still used in critical infrastructure like spam classification and Google Search. But the frontier of AI has shifted to autoregressors like GPT and Claude.
+
+> "Creation is more important than classification."
 
