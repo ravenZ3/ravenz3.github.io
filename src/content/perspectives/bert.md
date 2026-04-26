@@ -84,16 +84,17 @@ you can simply download the model and plug a head and suddenly you have an exper
 ## Downfall
  - BERT is quite good at what it does but it has a limitaion by its bidirectional nature. It can not generate. Even if it wanted to generate the first word of the story, it would need to see the next words to do so.
 It just can't start.
- `but still bert is like a brilliant critic but it can't write the book for you. It can tell you prefect facts about it but writing vol ii is not in its abilities.`
+
+ *`but still bert is like a brilliant critic but it can't write the book for you. It can tell you prefect facts about it but writing but a vol ii is not in its abilities.`*
 
  - BERT is not a generative model. It is a discriminative model. GPT styled models function by given a certain sets of words, what will be the next word?
  It turns out instruction following is not very differnt from the next-word task. And because it can genereate tokens one after another, it can chat. You can't do that with bert in a natural manner.
 
  - Scaling
- When we scaled gpt to billions of parameters, something magical happened- it become so good at predicting the next word that it accidently learned how to reason, write code, and follow complex logic without ever being explicitly fine tuned for it. 
+ When we scaled gpt to billions of parameters, something magical happened~ it become so good at predicting the next word that it accidently learned how to reason, write code, and follow complex logic without ever being explicitly fine tuned for it. 
  
  ## epilouge
- BERT still use bert in critial infrastructure like spam classification or google search (research req.).
- But the frontend of AI has shifted to autoregressor like GPT and Claude.
- "Creation is more important than classification." 
+ BERT is still used in critial infrastructure like spam classification or google search (research req.).
+ But the frontend of AI has shifted to autoregressors like GPT and Claude.
+> "Creation is more important than classification." 
 
