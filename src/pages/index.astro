@@ -21,19 +21,26 @@ const PREVIEW = 3;
 
 const newestNotes = [...allNotes]
   .filter(n => n.data.date)
-  .sort((a, b) => b.data.date!.getTime() - a.data.date!.getTime())
-  .slice(0, PREVIEW);
+  .sort((a, b) => b.data.date!.getTime() - a.data.date!.getTime());
 
 const literary = allNotes.filter(n => n.collection === 'literary').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 const perspectives = allNotes.filter(n => n.collection === 'perspectives').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 const reflections = allNotes.filter(n => n.collection === 'reflections').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 
 const categories = [
-  { title: 'Newest',       href: null,             notes: newestNotes,              total: allNotes.filter(n => n.data.date).length },
-  { title: 'Literary',     href: '/literary',      notes: literary.slice(0,PREVIEW),     total: literary.length },
-  { title: 'Perspectives', href: '/perspectives',  notes: perspectives.slice(0,PREVIEW), total: perspectives.length },
-  { title: 'Reflections',  href: '/reflections',   notes: reflections.slice(0,PREVIEW),  total: reflections.length },
+  { title: 'Newest',       href: null,             notes: newestNotes },
+  { title: 'Literary',     href: '/literary',      notes: literary },
+  { title: 'Perspectives', href: '/perspectives',  notes: perspectives },
+  { title: 'Reflections',  href: '/reflections',   notes: reflections },
 ];
+
+const featuredNotes = allNotes
+  .filter(n => n.data.stage === 'evergreen')
+  .sort((a, b) => {
+    if (a.data.date && b.data.date) return b.data.date.getTime() - a.data.date.getTime();
+    return 0;
+  })
+  .slice(0, 3);
 
 const categoryRows = chunk(categories, 3);
 ---
@@ -61,6 +68,23 @@ const categoryRows = chunk(categories, 3);
 
 
 
+    {featuredNotes.length > 0 && (
+      <div class="featured-section">
+        <span class="featured-label">Featured Articles</span>
+        <div class="featured-grid">
+          {featuredNotes.map(note => (
+            <a href={noteUrl(note.collection, note.slug)} class="featured-item">
+              <div class="featured-title">{note.data.title}</div>
+              {note.data.description && (
+                <p class="featured-desc">{note.data.description}</p>
+              )}
+              <div class="featured-meta">{note.collection}</div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
     <div class="stage-filters" id="stage-filters">
       <button class="stage-filter active" data-filter="all">All</button>
       <button class="stage-filter" data-filter="evergreen">● Evergreen</button>
@@ -86,8 +110,8 @@ const categoryRows = chunk(categories, 3);
                   </li>
                 ))}
               </ul>
-              {cat.href && cat.total > PREVIEW && (
-                <a href={cat.href} class="category-more">···  {cat.total - PREVIEW} more</a>
+              {cat.href && cat.notes.length > PREVIEW && (
+                <a href={cat.href} class="category-more">···  {cat.notes.length - PREVIEW} more</a>
               )}
             </section>
           ))}
@@ -135,7 +159,7 @@ const categoryRows = chunk(categories, 3);
   margin: 0 auto 2rem;
   text-align: center;
 }
-.home-intro strong { font-weight: 600; }
+.home-intro strong { font-weight: 400; font-style: italic; }
 .home-intro a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--border); }
 .home-intro a:hover { color: var(--text); }
 
@@ -154,15 +178,14 @@ const categoryRows = chunk(categories, 3);
 
 .category-title {
   font-family: var(--serif);
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 600;
   font-variant: small-caps;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
   border-bottom: 1px dotted var(--border);
-  padding-bottom: 0.3rem;
+  padding-bottom: 0.35rem;
   margin-bottom: 1rem;
-  color: var(--text);
+  color: var(--muted);
   text-align: center;
 }
 
@@ -237,6 +260,70 @@ const categoryRows = chunk(categories, 3);
   line-height: 1;
 }
 
+/* ── Featured section ─────────────────────────────────────────── */
+.featured-section {
+  margin: 0 0 1.75rem;
+  padding: 1rem 0 1.25rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.featured-label {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 0.9rem;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.9rem 3rem;
+}
+
+.featured-item {
+  display: block;
+  text-decoration: none;
+}
+
+.featured-title {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 0.2rem;
+  transition: color 0.15s;
+}
+
+.featured-item:hover .featured-title {
+  text-decoration: underline;
+  text-decoration-color: var(--faint);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.featured-desc {
+  font-family: var(--serif);
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0 0 0.25rem;
+}
+
+.featured-meta {
+  font-family: var(--sans);
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
 /* ── Stage filters ─────────────────────────────────────────────── */
 .stage-filters {
   display: flex;
@@ -291,15 +378,30 @@ const categoryRows = chunk(categories, 3);
 </style>
 
 <script>
+  const LIMIT = 3;
+
+  function applyFilter(filter: string) {
+    document.querySelectorAll<HTMLElement>('.category-list').forEach(list => {
+      const items = Array.from(list.querySelectorAll<HTMLElement>('li[data-stage]'));
+      if (filter === 'all') {
+        items.forEach((li, i) => { li.style.display = i < LIMIT ? '' : 'none'; });
+      } else {
+        items.forEach(li => { li.style.display = li.dataset.stage === filter ? '' : 'none'; });
+      }
+    });
+
+    document.querySelectorAll<HTMLElement>('.category-more').forEach(link => {
+      link.style.display = filter === 'all' ? '' : 'none';
+    });
+  }
+
+  applyFilter('all');
+
   document.querySelectorAll('.stage-filter').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.stage-filter').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
-      const filter = (btn as HTMLElement).dataset.filter;
-      document.querySelectorAll<HTMLElement>('.category-list li[data-stage]').forEach(li => {
-        li.style.display = (filter === 'all' || li.dataset.stage === filter) ? '' : 'none';
-      });
+      applyFilter((btn as HTMLElement).dataset.filter!);
     });
   });
 </script>

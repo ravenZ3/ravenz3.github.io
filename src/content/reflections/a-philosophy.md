@@ -1,5 +1,5 @@
 ---
-title: "A Philosophy of Living"
+title: "A Draft of my Philosophy "
 stage: seedling
 tags: [philosophy, identity, values, freedom, work, creativity]
 kind: essay
