@@ -47,3 +47,19 @@ This forces the model to maintain a high-quality representation for *every* word
 ## Next Sentence Prediction (NSP)
 MLM is great for learning relationships between words. But what if we need to understand relationships between whole sentences (like in Question Answering or Entailment)?
 
+BERT is trained to predict if Sentence B is the logical continuation of Sentence A. To do this, it introduces **Architectural Tokens**:
+
+### 1. The `[CLS]` Token (Classification)
+The `[CLS]` token is always the **very first** token. It has no meaning of its own (it's a "blank sponge"). Because BERT uses full self-attention, the `[CLS]` token gathers information from every other token in the sequence across all layers. By the final layer, its vector represents a **summary** of the entire sequence, which BERT uses for its final classification decision.
+
+### 2. The `[SEP]` Token (Separator)
+A special marker placed between Sentence A and Sentence B, and at the very end.
+
+### 3. Segment Embeddings (The "Armband")
+How does BERT know which word belongs to which sentence if they are in one big list? It adds a "Segment Embedding" (a unique vector for A vs B) to every single word. Every token is actually a sum of three layers:
+- **Token**: The word itself.
+- **Position**: Where it is in the 512-token sequence.
+- **Segment**: Which sentence (A or B) it belongs to.
+
+Combined, these allow BERT to "feel" the structure of the input and reason about how the two sentences relate.
+

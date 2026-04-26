@@ -43,6 +43,7 @@ const featuredNotes = allNotes
   .slice(0, 3);
 
 const categoryRows = chunk(categories, 3);
+const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 ---
 <Base title="ravenZ3" description="A digital garden of notes — prose, perspectives, and reflections by Ramjan Khandelwal.">
   <div class="home-grid-container">
@@ -50,11 +51,12 @@ const categoryRows = chunk(categories, 3);
     <!-- Gwern-style site intro -->
     <div class="home-intro">
       <p>
-        This is the website of <strong>Ramjan Khandelwal</strong>. I write about AI, robotics, and the messy beauty of programming.
+        <span class="intro-lead">This is the website of <strong>Ramjan Khandelwal</strong>.</span>
+        I write about AI, robotics, and the messy beauty of programming.
         <span class="intro-label">Navigation:</span> For information about my site’s philosophy & method, see the <a href="/about">About page</a>.
         <span class="intro-label">Features:</span> To use dark-mode (
-          <button class="intro-btn" data-theme-set="auto" title="Auto theme">◑ Auto</button> 
-          <button class="intro-btn" data-theme-set="light" title="Light theme">☀ Light</button> 
+          <button class="intro-btn" data-theme-set="auto" title="Auto theme">◑ Auto</button>
+          <button class="intro-btn" data-theme-set="light" title="Light theme">☀ Light</button>
           <button class="intro-btn" data-theme-set="dark" title="Dark theme">🌙 Dark</button>
         ) or search the site (
           <button class="intro-btn search-trigger" id="intro-search-btn" title="Search notes">
@@ -70,7 +72,7 @@ const categoryRows = chunk(categories, 3);
 
     {featuredNotes.length > 0 && (
       <div class="featured-section">
-        <span class="featured-label">Featured Articles</span>
+        <span class="featured-label">Selected Writings</span>
         <div class="featured-grid">
           {featuredNotes.map(note => (
             <a href={noteUrl(note.collection, note.slug)} class="featured-item">
@@ -127,6 +129,7 @@ const categoryRows = chunk(categories, 3);
     ))}
 
   </div>
+
 </Base>
 
 <style>
@@ -153,13 +156,17 @@ const categoryRows = chunk(categories, 3);
 /* ── Intro ─────────────────────────────────────────────────────── */
 .home-intro {
   font-family: var(--serif);
-  font-size: 1rem;
-  line-height: 1.7;
-  max-width: 800px;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  max-width: 720px;
   margin: 0 auto 2rem;
-  text-align: center;
+  color: var(--muted);
 }
-.home-intro strong { font-weight: 400; font-style: italic; }
+.home-intro .intro-lead {
+  font-size: 1.2rem;
+  color: var(--text);
+}
+.home-intro strong { font-weight: 400; font-style: italic; color: var(--text); }
 .home-intro a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--border); }
 .home-intro a:hover { color: var(--text); }
 
@@ -240,7 +247,7 @@ const categoryRows = chunk(categories, 3);
 
 .category-list a {
   font-family: var(--serif);
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   color: var(--text);
   text-decoration: underline;
   text-decoration-color: var(--border);
@@ -260,6 +267,91 @@ const categoryRows = chunk(categories, 3);
   line-height: 1;
 }
 
+/* ── Micro terminal ───────────────────────────────────────────── */
+.micro-terminal {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+  min-width: 200px;
+  position: fixed;
+  right: 3rem;
+  bottom: 4rem;
+  z-index: 150;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  user-select: none;
+}
+
+.terminal-bar {
+  background: var(--surface2);
+  padding: 0.28rem 0.55rem;
+  display: flex;
+  gap: 0.28rem;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  cursor: grab;
+}
+
+.terminal-bar:active {
+  cursor: grabbing;
+}
+
+.terminal-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.dot-close { background: #ff5f57; cursor: pointer; }
+.dot-min   { background: #febc2e; }
+.dot-max   { background: #28c840; }
+
+.terminal-body {
+  padding: 0.5rem 0.8rem 0.6rem;
+  line-height: 1.7;
+}
+
+.terminal-line {
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.terminal-dim {
+  color: var(--faint);
+}
+
+.terminal-prompt {
+  color: var(--accent);
+}
+
+.terminal-key {
+  color: var(--muted);
+}
+
+.terminal-sep {
+  color: var(--faint);
+}
+
+.terminal-val {
+  color: var(--text);
+}
+
+.terminal-cursor {
+  display: inline-block;
+  color: var(--faint);
+  animation: blink 1.1s step-end infinite;
+  margin-left: 1px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
 /* ── Featured section ─────────────────────────────────────────── */
 .featured-section {
   margin: 0 0 1.75rem;
@@ -271,10 +363,9 @@ const categoryRows = chunk(categories, 3);
 .featured-label {
   display: block;
   font-family: var(--sans);
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--faint);
   margin-bottom: 0.9rem;
 }
@@ -292,11 +383,11 @@ const categoryRows = chunk(categories, 3);
 
 .featured-title {
   font-family: var(--serif);
-  font-size: 1.05rem;
+  font-size: 1.35rem;
   font-weight: 400;
   color: var(--text);
-  line-height: 1.35;
-  margin-bottom: 0.2rem;
+  line-height: 1.25;
+  margin-bottom: 0.25rem;
   transition: color 0.15s;
 }
 
@@ -404,4 +495,5 @@ const categoryRows = chunk(categories, 3);
       applyFilter((btn as HTMLElement).dataset.filter!);
     });
   });
+
 </script>

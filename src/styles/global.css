@@ -494,21 +494,38 @@ body {
 --------------------------------------------------------------- */
 .site-footer {
   border-top: 1px solid var(--border);
-  padding: 1.25rem var(--pad);
+  padding: 1rem var(--pad);
   text-align: center;
-  font-family: var(--sans);
-  font-size: 0.62rem;
-  letter-spacing: 0.05em;
+  font-family: var(--mono);
+  font-size: 0.65rem;
   color: var(--faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.site-footer a {
-  color: var(--faint);
-  text-decoration: none;
-}
-
-.site-footer a:hover {
+.footer-prompt {
   color: var(--muted);
+}
+
+.footer-sep {
+  color: var(--faint);
+  opacity: 0.5;
+}
+
+.footer-dim {
+  color: var(--faint);
+  opacity: 0.5;
+}
+
+.footer-link {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-link:hover {
+  color: var(--text);
 }
 
 /* ---------------------------------------------------------------
