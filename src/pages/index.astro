@@ -29,7 +29,6 @@ const reflections = allNotes.filter(n => n.collection === 'reflections').sort((a
 const papers = allNotes.filter(n => n.collection === 'papers').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 
 const categories = [
-  { title: 'Newest',       href: null,             notes: newestNotes },
   { title: 'Literary',     href: '/literary',      notes: literary },
   { title: 'Perspectives', href: '/perspectives',  notes: perspectives },
   { title: 'Reflections',  href: '/reflections',   notes: reflections },
@@ -53,24 +52,27 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
     <!-- Gwern-style site intro -->
     <div class="home-intro">
       <p>
-        <span class="intro-lead">This is the website of <strong>Ramjan Khandelwal</strong>.</span>
-        I write about AI, robotics, and the messy beauty of programming.
-        <span class="intro-label">Navigation:</span> For information about my site’s philosophy & method, see the <a href="/about">About page</a>.
-        <span class="intro-label">Features:</span> To use dark-mode (
+        For my site’s philosophy & method, see the <a href="/about">About page</a>.
+        Switch themes (
           <button class="intro-btn" data-theme-set="auto" title="Auto theme">◑ Auto</button>
           <button class="intro-btn" data-theme-set="light" title="Light theme">☀ Light</button>
           <button class="intro-btn" data-theme-set="dark" title="Dark theme">🌙 Dark</button>
-        ) or search the site (
+        ) or search (
           <button class="intro-btn search-trigger" id="intro-search-btn" title="Search notes">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1em; height: 1em; vertical-align: -0.15em; fill: none; stroke: currentColor; stroke-width: 2;">
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-linecap="round"/>
             </svg>
           </button>
-        ), use the floating toggle bar on the right side.
+        ) using the floating bar on the right.
       </p>
     </div>
 
 
+
+    <blockquote class="home-epigraph">
+      <p>The first principle is that you must not fool yourself — and you are the easiest person to fool.</p>
+      <cite>— Richard Feynman</cite>
+    </blockquote>
 
     {featuredNotes.length > 0 && (
       <div class="featured-section">
@@ -135,6 +137,30 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
 </Base>
 
 <style>
+/* ── Epigraph ─────────────────────────────────────────────────── */
+.home-epigraph {
+  margin: 0 auto 2rem;
+  max-width: 520px;
+  text-align: center;
+  border: none;
+  padding: 0;
+}
+.home-epigraph p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0 0 0.35rem;
+}
+.home-epigraph cite {
+  font-family: var(--serif);
+  font-size: 0.75rem;
+  font-style: normal;
+  color: var(--faint);
+  letter-spacing: 0.03em;
+}
+
 /* ── Intro ────────────────────────────────────────────────────── */
 .intro-label {
   font-family: var(--sans);

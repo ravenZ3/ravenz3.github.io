@@ -16,7 +16,7 @@ interface Props {
 }
 
 const { note, backlinks, headings } = Astro.props;
-const { title, stage, tags, date, modified, kind, description, certainty, importance } = note.data;
+const { title, stage, tags, date, modified, kind, description } = note.data;
 const isDropCap = kind === 'prose';
 
 const formatDate = (d: Date | undefined) => d?.toISOString().split('T')[0];
@@ -139,28 +139,14 @@ for (const h of headings) {
           <span class="note-meta-stage" title={`Stage: ${STAGE_LABEL[stage]}`}>
             {stage} {STAGE_SYMBOL[stage]}
           </span>
-          {certainty && (
-            <>
-              <span class="sep">·</span>
-              <span class="note-meta-certainty">
-                <span class="note-meta-label">⌊certainty:</span> {certainty} {STAGE_SYMBOL[stage]}
-              </span>
-            </>
-          )}
-          {importance !== undefined && (
-            <>
-              <span class="sep">·</span>
-              <span class="note-meta-importance">
-                <span class="note-meta-label">⌊importance:</span> {importance}
-              </span>
-            </>
-          )}
         </div>
-        <div class="note-meta" style="margin-top: 0.35rem; font-size: 0.78rem;">
-          <a href="#backlinks" class="note-tag" style="text-decoration: none;">⌊backlinks☗</a>
-          <span class="sep">·</span>
-          <a href="#similar" class="note-tag" style="text-decoration: none;">⌊similar≈</a>
-        </div>
+        {tags && tags.length > 0 && (
+          <div class="note-meta note-tags-row" style="margin-top: 0.35rem;">
+            {tags.map(tag => (
+              <a href={`/tags/${tag}`} class="note-tag-pill">#{tag}</a>
+            ))}
+          </div>
+        )}
       </header>
 
       <div class:list={['prose', isDropCap && 'drop-cap']}>

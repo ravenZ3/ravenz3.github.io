@@ -17,15 +17,15 @@
 --------------------------------------------------------------- */
 :root,
 [data-theme="dark"] {
-  --bg: #111110;
-  --surface: #1a1917;
-  --surface2: #222120;
-  --text: #e0dad0;
-  --muted: #c8c3b8;
-  --faint: #958f85;
-  --border: #3a3730;
-  --link: #b0a898;
-  --accent: #c8b8a8;
+  --bg: #000000;
+  --surface: #0d0d0d;
+  --surface2: #1a1a1a;
+  --text: #f0f0f0;
+  --muted: #999999;
+  --faint: #555555;
+  --border: #2a2a2a;
+  --link: #bbbbbb;
+  --accent: #dddddd;
 
   --serif: 'Merriweather', Georgia, 'Times New Roman', serif;
   --sans: 'Source Sans 3', ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -117,6 +117,10 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
+}
+
+
+body {
   font-family: var(--serif);
   line-height: 1.5;
   min-height: 100svh;
@@ -452,6 +456,16 @@ body {
   flex-direction: column;
 }
 
+.site-tagline {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+  margin: 0.75rem auto 0;
+  padding: 0 2rem;
+}
+
 /* Three-column note layout */
 .note-layout {
   display: grid;
@@ -634,6 +648,30 @@ body {
 .note-tag-sep {
   color: var(--faint);
   font-style: normal;
+}
+
+.note-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.note-tag-pill {
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 0.1rem 0.45rem;
+  border-radius: 2px;
+  transition: color 0.1s, border-color 0.1s;
+}
+
+.note-tag-pill:hover {
+  color: var(--muted);
+  border-color: var(--muted);
 }
 
 .note-description {
@@ -963,29 +1001,38 @@ body {
 /* Sidenote column (right sidebar on note pages) */
 .sidenote-column {
   position: relative;
-  font-size: 0.78rem;
-  line-height: 1.55;
+  font-size: 0.76rem;
+  line-height: 1.6;
   color: var(--muted);
   font-family: var(--serif);
+  font-style: italic;
   padding-top: 2.5rem;
 }
 
 /* Each individual sidenote, absolutely positioned by JS */
 .sidenote-item {
   position: absolute;
-  left: 1rem;
+  left: 1.25rem;
   right: 0.5rem;
   text-align: left;
   hyphens: auto;
+  padding-left: 0.75rem;
+  border-left: 1px solid var(--border);
+  transition: border-color 0.15s;
+}
+
+.sidenote-item:hover {
+  border-left-color: var(--muted);
 }
 
 .sidenote-num {
   font-family: var(--sans);
-  font-size: 0.65em;
+  font-style: normal;
+  font-size: 0.6em;
   color: var(--faint);
   vertical-align: super;
   line-height: 0;
-  margin-right: 0.15em;
+  margin-right: 0.2em;
 }
 
 /* Wide: hide .footnotes; narrow: show .footnotes, hide sidenote-column */

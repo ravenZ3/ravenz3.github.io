@@ -11,11 +11,6 @@ const noteSchema = z.object({
   modified: z.coerce.date().optional(),
   // 'prose' enables drop cap
   kind: z.enum(['prose', 'essay', 'note']).optional().default('note'),
-  // Epistemic metadata (Gwern-style)
-  certainty: z.enum([
-    'impossible', 'unlikely', 'possible', 'likely', 'highly likely', 'certain'
-  ]).optional().default('possible'),
-  importance: z.number().min(0).max(10).optional().default(5),
 });
 
 export const collections = {

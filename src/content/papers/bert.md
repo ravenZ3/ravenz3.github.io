@@ -1,6 +1,6 @@
 ---
 title: "BERT"
-stage: evergreen
+stage: seedling
 tags: [papers, nlp]
 kind: note
 date: 2026-04-26
@@ -14,7 +14,7 @@ The previous autoregressive models predicted the next word based on the previous
 > "The animal didn't cross the road because it was too tired."
 > "The animal didn't cross the road because it was too wide."
 
-The word "it" is easy enough for the model to generate. But the model builds a poor *representation* of what "it" refers to: it could be the animal or the road. The ambiguity only resolves with the words that come *after*: 'tired' points to the animal, 'wide' points to the road.
+The word "it" is easy enough for the model to generate. But the model builds a poor *representation* of what "it" refers to: it could be the animal or the road. The ambiguity only resolves with the words that come *after*: 'tired' points to the animal, 'wide' points to the road.[^1]
 
 So we have isolated the problem to the ambiguity of reference. When we are looking from left to right we are left with the ambiguity of the future tokens. Similarly, when we are looking from right to left we are left with the ambiguity of the past tokens.
 
@@ -26,7 +26,7 @@ Two different representations of the same word 'it' are generated, one from the 
 
 The right-context representation is without any knowledge of 'animal' and the left-context representation is without any knowledge of 'tired'. You glue them together but neither representation was formed with knowledge of the other side.
 
-In BERT's self-attention, when building the representation for "it", the model attends to "animal" and "tired" simultaneously in the same attention computation. It can learn: "when I see 'tired' on the right AND 'animal' on the left, 'it' = animal." That joint reasoning in a single pass is what makes it truly bidirectional, not just bi-directional-then-glued.
+In BERT's self-attention, when building the representation for "it", the model attends to "animal" and "tired" simultaneously in the same attention computation. It can learn: "when I see 'tired' on the right AND 'animal' on the left, 'it' = animal." That joint reasoning in a single pass is what makes it truly bidirectional, not just bi-directional-then-glued.[^2]
 
 ### Why not just remove GPT's mask?
 
@@ -93,7 +93,11 @@ You can simply download the model, plug a head on top, and suddenly you have an 
 
 ## Epilogue
 
-BERT is still used in critical infrastructure like spam classification and Google Search. But the frontier of AI has shifted to autoregressors like GPT and Claude.
+BERT is still used in critical infrastructure like spam classification and Google Search. But the frontier of AI has shifted to autoregressors like GPT and Claude.[^3]
 
 > "Creation is more important than classification."
+
+[^1]: This is the classic coreference resolution problem — something humans solve effortlessly using world knowledge and full sentence context.
+[^2]: ELMo concatenates two independently trained directional representations. BERT fuses both directions within a single attention head. The difference is subtle but architecturally significant.
+[^3]: Interestingly, BERT's descendants (RoBERTa, DeBERTa) still dominate on discriminative benchmarks where generation is unnecessary — things like reading comprehension leaderboards.
 

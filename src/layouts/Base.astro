@@ -112,6 +112,9 @@ const navItems = [
   </header>
 
   <main class="site-main">
+    {title === siteName && (
+      <p class="site-tagline">writing on AI, robotics, and the beauty of programming</p>
+    )}
     <slot />
   </main>
 
