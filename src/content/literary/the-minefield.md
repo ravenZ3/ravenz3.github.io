@@ -11,7 +11,7 @@ Two soldiers walked through the morning meadow, unaware they had entered a minef
 
 One of them was a protégé, carrying the map, and the other was the major. They were tasked with carrying supplies between two infantry units.
 
-The major was feeling complacent that day. The sky was blue, the air pleasant on his face as they walked through the meadows. He spent the time talking about his siblings and friends, and the fields back home — how the paddy fields danced in the wind in August. The ground was sodden yet leaf-covered, autumn's carpet collecting beneath their boots.
+The major was feeling complacent that day. The sky was blue, the air pleasant on his face as they walked through the meadows. He spent the time talking about his siblings and friends, and the fields back home, how the paddy fields danced in the wind in August. The ground was sodden yet leaf-covered, autumn's carpet collecting beneath their boots.
 
 Major got carried away telling the protégé things from days gone by. Much like any old sport, he liked to reminisce once in a while.
 
@@ -27,7 +27,7 @@ They sank to the autumn leaves, gasping, shaking, tasting the miracle of being a
 
 They decided not to talk about this, and they did not. They found a different route, walking carefully to the infantry unit, wrapped in the surreal quietness of what could have been. The weight of almost-death clung to them like morning fog, invisible but suffocating.
 
-But we know what actually happened that fateful day. There were two lessons learned. They didn't share their epiphanies with each other — both decided to keep their realizations close to their chests, guilt pressing down on them.
+But we know what actually happened that fateful day. There were two lessons learned. They didn't share their epiphanies with each other. Both decided to keep their realizations close to their chests, guilt pressing down on them.
 
 The major learned that he shouldn't have been so careless. He could have cost his life, his protégé's, and all the others who depended on them.
 

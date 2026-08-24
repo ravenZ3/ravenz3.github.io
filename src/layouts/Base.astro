@@ -13,7 +13,7 @@ interface Props {
 const { title, description, activeNav, canonicalUrl, ogType, publishedTime, modifiedTime, tags } = Astro.props;
 const siteName = 'ravenZ3';
 const pageTitle = title === siteName ? siteName : `${title} · ${siteName}`;
-const defaultDesc = 'A digital garden of notes in various stages — prose, reflections, and papers by Ramjan Khandelwal.';
+const defaultDesc = 'A digital garden of notes in various stages: prose, reflections, and papers by Ramjan Khandelwal.';
 const siteUrl = 'https://ravenz3.github.io';
 const resolvedCanonical = canonicalUrl ?? Astro.url.href;
 const resolvedDesc = description ?? defaultDesc;

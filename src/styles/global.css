@@ -834,8 +834,6 @@ body {
 .prose h2 {
   font-size: 1.3rem;
   font-weight: 700;
-  font-variant: small-caps;
-  letter-spacing: 0.06em;
   margin: 2.5em 0 0.8em;
   line-height: 1.2;
   text-align: left;
@@ -930,6 +928,12 @@ body {
   line-height: 1.6;
   margin: 1.6em 0;
   text-align: left;
+}
+
+.prose .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.2em 0;
 }
 
 .prose code {

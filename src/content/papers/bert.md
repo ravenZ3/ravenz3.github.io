@@ -87,9 +87,9 @@ You can simply download the model, plug a head on top, and suddenly you have an 
 
   *BERT is like a brilliant critic who can't write the book for you. It can tell you precise facts about a text, but a volume II is not within its abilities.*
 
-- BERT is not a generative model — it is a discriminative model. GPT-style models function by asking: given a certain set of words, what will the next word be? It turns out instruction-following is not very different from the next-word task. And because it can generate tokens one after another, it can chat. You can't do that with BERT in any natural manner.
+- BERT is not a generative model. It is a discriminative model. GPT-style models function by asking: given a certain set of words, what will the next word be? It turns out instruction-following is not very different from the next-word task. And because it can generate tokens one after another, it can chat. You can't do that with BERT in any natural manner.
 
-- Scaling: when GPT was scaled to billions of parameters, something unexpected happened. It became so good at predicting the next word that it incidentally learned how to reason, write code, and follow complex logic — without ever being explicitly fine-tuned for it.
+- Scaling: when GPT was scaled to billions of parameters, something unexpected happened. It became so good at predicting the next word that it incidentally learned how to reason, write code, and follow complex logic, without ever being explicitly fine-tuned for it.
 
 ## Epilogue
 
@@ -97,7 +97,7 @@ BERT is still used in critical infrastructure like spam classification and Googl
 
 > "Creation is more important than classification."
 
-[^1]: This is the classic coreference resolution problem — something humans solve effortlessly using world knowledge and full sentence context.
+[^1]: This is the classic coreference resolution problem, something humans solve effortlessly using world knowledge and full sentence context.
 [^2]: ELMo concatenates two independently trained directional representations. BERT fuses both directions within a single attention head. The difference is subtle but architecturally significant.
-[^3]: Interestingly, BERT's descendants (RoBERTa, DeBERTa) still dominate on discriminative benchmarks where generation is unnecessary — things like reading comprehension leaderboards.
+[^3]: Interestingly, BERT's descendants (RoBERTa, DeBERTa) still dominate on discriminative benchmarks where generation is unnecessary, things like reading comprehension leaderboards.
 

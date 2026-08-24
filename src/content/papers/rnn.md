@@ -96,7 +96,7 @@ $$
 \frac{\partial h_j}{\partial h_{j-1}} = \text{diag}(1 - \tanh^2(\dots)) \cdot W_{hh}
 $$
 
-When backpropagating across a long sequence (say $T = 50$), you multiply $W_{hh}$ by itself 50 times:Vanishing Gradient: If the largest singular value of $W_{hh}$ is less than 1 (or because $\tanh'$ derivatives are $\le 1$), multiplying these matrices repeatedly causes the gradient to decay exponentially toward zero. Steps far in the past receive zero gradient update—the model forgets long-term context.Exploding Gradient: If the singular values of $W_{hh}$ are greater than 1, the product explodes exponentially toward infinity, producing NaN or wildly unstable training steps.
+When backpropagating across a long sequence (say $T = 50$), you multiply $W_{hh}$ by itself 50 times:Vanishing Gradient: If the largest singular value of $W_{hh}$ is less than 1 (or because $\tanh'$ derivatives are $\le 1$), multiplying these matrices repeatedly causes the gradient to decay exponentially toward zero. Steps far in the past receive zero gradient update. The model forgets long-term context.Exploding Gradient: If the singular values of $W_{hh}$ are greater than 1, the product explodes exponentially toward infinity, producing NaN or wildly unstable training steps.
 
 ## The Math behind Gradient Explosion
 
