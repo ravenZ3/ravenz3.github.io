@@ -1,6 +1,6 @@
 ---
 title: "RNN"
-stage: seedling
+stage: budding
 tags: [papers, nlp]
 kind: note
 date: 2026-08-24

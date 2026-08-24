@@ -112,7 +112,7 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
                 ))}
               </ul>
               {cat.href && cat.notes.length > PREVIEW && (
-                <a href={cat.href} class="category-more">···  {cat.notes.length - PREVIEW} more</a>
+                <a href={cat.href} class="category-more">··· {cat.notes.length - PREVIEW} more</a>
               )}
             </section>
           ))}
@@ -292,13 +292,14 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
 
 .category-more {
   display: block;
-  margin-top: 0.5rem;
+  margin-top: 0.3rem;
+  padding-left: 0;
   font-family: var(--serif);
   font-style: italic;
   font-size: 0.78rem;
   color: var(--faint);
   text-decoration: none;
-  text-align: center;
+  text-align: left;
   letter-spacing: 0.03em;
   transition: color 0.1s;
 }
