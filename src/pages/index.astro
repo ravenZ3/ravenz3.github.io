@@ -15,7 +15,7 @@ function chunk<T>(arr: T[], size: number): T[][] {
 // ── Notes for the "Newest" row (can be 3 categories or 3 sub-cols)
 // Let's split Newest into 3 columns if it's a huge list, or just one category of 3.
 // But the user's screenshot 113 shows "NEWEST", "POPULAR", "NOTABLE".
-// Your site has Literary, Perspectives, Reflections.
+// Your site has Literary, Reflections, Papers.
 
 const PREVIEW = 3;
 
@@ -24,55 +24,56 @@ const newestNotes = [...allNotes]
   .sort((a, b) => b.data.date!.getTime() - a.data.date!.getTime());
 
 const literary = allNotes.filter(n => n.collection === 'literary').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
-const perspectives = allNotes.filter(n => n.collection === 'perspectives').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 const reflections = allNotes.filter(n => n.collection === 'reflections').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 const papers = allNotes.filter(n => n.collection === 'papers').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
+const projects = allNotes.filter(n => n.collection === 'projects').sort((a,b) => { const o={evergreen:0,budding:1,seedling:2}; return o[a.data.stage]-o[b.data.stage]; });
 
 const categories = [
-  { title: 'Literary',     href: '/literary',      notes: literary },
-  { title: 'Perspectives', href: '/perspectives',  notes: perspectives },
-  { title: 'Reflections',  href: '/reflections',   notes: reflections },
   { title: 'Papers',       href: '/papers',        notes: papers },
+  { title: 'Literary',     href: '/literary',      notes: literary },
+  { title: 'Reflections',  href: '/reflections',   notes: reflections },
+  { title: 'Projects',     href: '/projects',      notes: projects },
 ];
 
-const featuredNotes = allNotes
-  .filter(n => n.data.stage === 'evergreen')
-  .sort((a, b) => {
-    if (a.data.date && b.data.date) return b.data.date.getTime() - a.data.date.getTime();
-    return 0;
-  })
-  .slice(0, 1);
+const evergreenNotes = allNotes.filter(n => n.data.stage === 'evergreen');
+const featuredNotes = evergreenNotes.length > 0
+  ? [evergreenNotes[Math.floor(Math.random() * evergreenNotes.length)]]
+  : [];
 
 const categoryRows = chunk(categories, 3);
 const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 ---
-<Base title="ravenZ3" description="A digital garden of notes — prose, perspectives, and reflections by Ramjan Khandelwal.">
+<Base title="ravenZ3" description="A digital garden of notes — prose, reflections, and papers by Ramjan Khandelwal.">
   <div class="home-grid-container">
 
-    <!-- Gwern-style site intro -->
-    <div class="home-intro">
-      <p>
-        For my site’s philosophy & method, see the <a href="/about">About page</a>.
-        Switch themes (
-          <button class="intro-btn" data-theme-set="auto" title="Auto theme">◑ Auto</button>
-          <button class="intro-btn" data-theme-set="light" title="Light theme">☀ Light</button>
-          <button class="intro-btn" data-theme-set="dark" title="Dark theme">🌙 Dark</button>
-        ) or search (
-          <button class="intro-btn search-trigger" id="intro-search-btn" title="Search notes">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1em; height: 1em; vertical-align: -0.15em; fill: none; stroke: currentColor; stroke-width: 2;">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-linecap="round"/>
-            </svg>
-          </button>
-        ) using the floating bar on the right.
-      </p>
+    <!-- Hero background band : fades into page background before Selected Writings -->
+    <div class="home-hero">
+      <!-- Gwern-style site intro -->
+      <div class="home-intro">
+        <p class="intro-lead">Did you know that there is a big difference between understanding and changing?</p>
+        <p>
+          For my site’s philosophy & method, see the <a href="/about">About page</a>.
+          Switch themes (
+            <button class="intro-btn" data-theme-set="auto" title="Auto theme">◑ Auto</button>
+            <button class="intro-btn" data-theme-set="light" title="Light theme">☀ Light</button>
+            <button class="intro-btn" data-theme-set="dark" title="Dark theme">🌙 Dark</button>
+          ) or search (
+            <button class="intro-btn search-trigger" id="intro-search-btn" title="Search notes">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1em; height: 1em; vertical-align: -0.15em; fill: none; stroke: currentColor; stroke-width: 2;">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-linecap="round"/>
+              </svg>
+            </button>
+          ) using the floating bar on the right.
+        </p>
+      </div>
+
+
+      <blockquote class="home-epigraph">
+        <p>"Fight for what matters to you, no matter what. Because even if we fall short, what better way is there to live?"</p>
+        <cite></cite>
+      </blockquote>
+
     </div>
-
-
-
-    <blockquote class="home-epigraph">
-      <p>The first principle is that you must not fool yourself — and you are the easiest person to fool.</p>
-      <cite>— Richard Feynman</cite>
-    </blockquote>
 
     {featuredNotes.length > 0 && (
       <div class="featured-section">
@@ -139,7 +140,7 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
 <style>
 /* ── Epigraph ─────────────────────────────────────────────────── */
 .home-epigraph {
-  margin: 0 auto 2rem;
+  margin: auto auto 0;
   max-width: 520px;
   text-align: center;
   border: none;
@@ -148,17 +149,19 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
 .home-epigraph p {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 0.95rem;
-  color: var(--muted);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.94);
   line-height: 1.7;
   margin: 0 0 0.35rem;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
 }
 .home-epigraph cite {
   font-family: var(--serif);
   font-size: 0.75rem;
   font-style: normal;
-  color: var(--faint);
+  color: rgba(255, 255, 255, 0.68);
   letter-spacing: 0.03em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
 }
 
 /* ── Intro ────────────────────────────────────────────────────── */
@@ -181,6 +184,49 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
 }
 
 
+/* ── Hero background band ─────────────────────────────────────── */
+.home-hero {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+  margin: -0.5rem -2.5rem 2rem;
+  padding: 4.5rem 2.5rem 3rem;
+}
+
+.home-hero::before {
+  content: '';
+  position: absolute;
+  top: -84px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(rgba(10, 12, 10, 0.42), rgba(10, 12, 10, 0.42)), url('/images/home-bg.jpg');
+  background-size: cover, cover;
+  background-position: center, center 55%;
+  z-index: -2;
+}
+
+.home-hero::after {
+  content: '';
+  position: absolute;
+  top: -84px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, transparent 45%, var(--bg) 100%);
+  z-index: -1;
+}
+
+@media (max-width: 600px) {
+  .home-hero {
+    min-height: 420px;
+    margin: -1.5rem -1rem 1.5rem;
+    padding: 3rem 1rem 2rem;
+  }
+}
+
 /* ── Intro ─────────────────────────────────────────────────────── */
 .home-intro {
   font-family: var(--serif);
@@ -188,15 +234,19 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
   line-height: 1.75;
   max-width: 720px;
   margin: 0 auto 2rem;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
 }
 .home-intro .intro-lead {
-  font-size: 1.2rem;
-  color: var(--text);
+  font-size: inherit;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
 }
-.home-intro strong { font-weight: 400; font-style: italic; color: var(--text); }
-.home-intro a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--border); }
-.home-intro a:hover { color: var(--text); }
+.home-intro strong { font-weight: 400; font-style: italic; color: rgba(255, 255, 255, 0.96); }
+.home-intro a { color: rgba(255, 255, 255, 0.85); text-decoration: underline; text-decoration-color: rgba(255, 255, 255, 0.4); }
+.home-intro a:hover { color: #fff; }
+.home-intro .intro-btn { color: rgba(255, 255, 255, 0.85); text-decoration-color: rgba(255, 255, 255, 0.4); }
+.home-intro .intro-btn:hover { color: #fff; text-decoration-color: rgba(255, 255, 255, 0.7); }
 
 /* ── Category Row (Grid of Categories) ─────────────────────────── */
 .category-row {

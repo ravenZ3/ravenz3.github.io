@@ -457,13 +457,16 @@ body {
 }
 
 .site-tagline {
+  position: relative;
+  z-index: 1;
   font-family: var(--serif);
   font-style: italic;
   font-size: 0.85rem;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.85);
   text-align: center;
   margin: 0.75rem auto 0;
   padding: 0 2rem;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
 }
 
 /* Three-column note layout */
@@ -941,6 +944,32 @@ body {
   background: none;
   padding: 0;
   font-size: inherit;
+}
+
+/* ---------------------------------------------------------------
+   Inline diagrams (embedded images)
+--------------------------------------------------------------- */
+.prose figure.rnn-diagram {
+  margin: 2em 0;
+  text-align: center;
+}
+
+.prose figure.rnn-diagram img {
+  width: 100%;
+  max-width: 620px;
+  height: auto;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.prose figure.rnn-diagram figcaption {
+  margin-top: 0.6em;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
 }
 
 /* Drop cap — kind: prose */

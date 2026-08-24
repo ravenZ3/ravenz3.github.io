@@ -15,8 +15,8 @@ const noteSchema = z.object({
 
 export const collections = {
   literary:     defineCollection({ type: 'content', schema: noteSchema }),
-  perspectives: defineCollection({ type: 'content', schema: noteSchema }),
   reflections:  defineCollection({ type: 'content', schema: noteSchema }),
   finance:      defineCollection({ type: 'content', schema: noteSchema }),
   papers:       defineCollection({ type: 'content', schema: noteSchema }),
+  projects:     defineCollection({ type: 'content', schema: noteSchema }),
 };
