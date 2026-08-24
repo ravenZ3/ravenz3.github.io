@@ -52,18 +52,12 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
       <div class="home-intro">
         <p class="intro-lead">Did you know that there is a big difference between understanding and changing?</p>
         <p>
-          For my site’s philosophy & method, see the <a href="/about">About page</a>.
-          Switch themes (
-            <button class="intro-btn" data-theme-set="auto" title="Auto theme">◑ Auto</button>
-            <button class="intro-btn" data-theme-set="light" title="Light theme">☀ Light</button>
-            <button class="intro-btn" data-theme-set="dark" title="Dark theme">🌙 Dark</button>
-          ) or search (
-            <button class="intro-btn search-trigger" id="intro-search-btn" title="Search notes">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1em; height: 1em; vertical-align: -0.15em; fill: none; stroke: currentColor; stroke-width: 2;">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-linecap="round"/>
-              </svg>
-            </button>
-          ) using the floating bar on the right.
+          *for my site’s philosophy & method, see the <a href="/about">about page</a>.
+          switch themes (
+            <button class="intro-btn" data-theme-set="auto" title="Auto theme">◑auto</button>
+            <button class="intro-btn" data-theme-set="light" title="Light theme">☀light</button>
+            <button class="intro-btn" data-theme-set="dark" title="Dark theme">🌙dark</button>
+          ) or search<button class="intro-btn search-trigger" id="intro-search-btn" title="Search notes"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1em; height: 1em; vertical-align: -0.15em; fill: none; stroke: currentColor; stroke-width: 2;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-linecap="round"/></svg></button> using the floating bar on the right.
         </p>
       </div>
 
@@ -155,6 +149,14 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
   margin: 0 0 0.35rem;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
 }
+:global([data-theme="light"]) .home-epigraph p {
+  color: rgba(0, 0, 0, 0.88);
+  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.6);
+}
+:global([data-theme="light"]) .home-epigraph cite {
+  color: rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.6);
+}
 .home-epigraph cite {
   font-family: var(--serif);
   font-size: 0.75rem;
@@ -242,11 +244,14 @@ const deployDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', mont
   font-weight: 400;
   color: rgba(255, 255, 255, 0.85);
 }
-.home-intro strong { font-weight: 400; font-style: italic; color: rgba(255, 255, 255, 0.96); }
-.home-intro a { color: rgba(255, 255, 255, 0.85); text-decoration: underline; text-decoration-color: rgba(255, 255, 255, 0.4); }
-.home-intro a:hover { color: #fff; }
-.home-intro .intro-btn { color: rgba(255, 255, 255, 0.85); text-decoration-color: rgba(255, 255, 255, 0.4); }
-.home-intro .intro-btn:hover { color: #fff; text-decoration-color: rgba(255, 255, 255, 0.7); }
+.home-intro p:not(.intro-lead) {
+  color: rgba(240, 233, 219, 0.85);
+}
+.home-intro strong { font-weight: 400; font-style: italic; color: rgba(245, 238, 224, 0.96); }
+.home-intro a { color: rgba(240, 233, 219, 0.85); text-decoration: underline; text-decoration-color: rgba(240, 233, 219, 0.4); }
+.home-intro a:hover { color: #f5eee0; }
+.home-intro .intro-btn { color: rgba(240, 233, 219, 0.85); text-decoration-color: rgba(240, 233, 219, 0.4); }
+.home-intro .intro-btn:hover { color: #f5eee0; text-decoration-color: rgba(240, 233, 219, 0.7); }
 
 /* ── Category Row (Grid of Categories) ─────────────────────────── */
 .category-row {

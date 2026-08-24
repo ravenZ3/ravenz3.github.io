@@ -45,11 +45,22 @@
 :root[data-font="merriweather"] {
   --serif: 'Merriweather', Georgia, 'Times New Roman', serif;
 }
+:root[data-font="geist"] {
+  --serif: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
 
 @font-face {
   font-family: 'Kanzlei Initialen';
   src: url('/fonts/kanzlei-initialen.ttf') format('truetype');
   font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/geist/Geist-Variable.woff2') format('woff2-variations'), url('/fonts/geist/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
@@ -64,18 +75,6 @@
   --border: #d4d4d8;
   --link: #18181b;
   --accent: #3f3f46;
-}
-
-[data-theme="sepia"] {
-  --bg: #f5ead6;
-  --surface: #ece0c8;
-  --surface2: #e0d4bc;
-  --text: #2a2010;
-  --muted: #6a5a48;
-  --faint: #a09080;
-  --border: #c8b898;
-  --link: #4a3820;
-  --accent: #8a6a48;
 }
 
 @media (prefers-color-scheme: light) {
@@ -235,7 +234,6 @@ body {
 }
 
 .intro-btn.search-trigger {
-  text-decoration: none;
   vertical-align: middle;
   font-size: 0.85em;
   margin-left: 2px;
