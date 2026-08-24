@@ -191,15 +191,22 @@ for (const h of headings) {
   const stickyHeader = document.getElementById('sticky-header');
   const progressBar  = document.getElementById('sticky-progress');
 
-  // Progress bar
+  // Progress bar + show-while-scrolling, hide 1s after scrolling stops
+  let hideTimeout: ReturnType<typeof setTimeout> | undefined;
+
   if (progressBar) {
     window.addEventListener('scroll', () => {
       const winScroll = document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       progressBar.style.width = ((winScroll / height) * 100) + '%';
 
+      clearTimeout(hideTimeout);
+
       if (winScroll > 200) {
         stickyHeader?.classList.add('visible');
+        hideTimeout = setTimeout(() => {
+          stickyHeader?.classList.remove('visible');
+        }, 1000);
       } else {
         stickyHeader?.classList.remove('visible');
       }
