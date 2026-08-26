@@ -4,6 +4,7 @@ stage: seedling
 tags: [philosophy, identity, values, freedom, work, creativity]
 kind: essay
 date: 2026-04-25
+private: true
 description: "A working draft of how I want to live - not a destination, but the feeling of moving correctly. Written to be proven wrong in interesting ways."
 ---
 

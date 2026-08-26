@@ -11,6 +11,8 @@ const noteSchema = z.object({
   modified: z.coerce.date().optional(),
   // 'prose' enables drop cap
   kind: z.enum(['prose', 'essay', 'note']).optional().default('note'),
+  // Private notes are excluded from the built site entirely (no page, no listing).
+  private: z.boolean().optional().default(false),
 });
 
 export const collections = {

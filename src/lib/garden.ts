@@ -24,7 +24,7 @@ export async function getAllNotes() {
     ...finance.map(e      => ({ ...e, collection: 'finance'      as const })),
     ...papers.map(e       => ({ ...e, collection: 'papers'       as const })),
     ...projects.map(e     => ({ ...e, collection: 'projects'     as const })),
-  ];
+  ].filter(note => !note.data.private);
 }
 
 export type GardenNote = Awaited<ReturnType<typeof getAllNotes>>[number];
