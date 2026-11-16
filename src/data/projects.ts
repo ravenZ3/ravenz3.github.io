@@ -4,6 +4,8 @@
 export interface Project {
   slug: string;
   name: string;
+  tagline: string; // one short line for the home page tile
+  cover: string;   // home tile cover: an image path, or 'bench' / 'verdict' for drawn ones
   summary: string;
   result: string;
   details: string[];
@@ -19,6 +21,8 @@ export const featured: Project[] = [
   {
     slug: 'agentic-rag-eval-harness',
     name: 'Agentic RAG eval harness',
+    tagline: 'Scores how an agent reached its answer, not just the answer, and blocks PRs that regress.',
+    cover: 'verdict',
     summary:
       'Evaluation and CI regression gate for a LangGraph retrieval agent. It scores the final answer, the path the agent took to get there, and runs a cross-provider LLM judge.',
     result:
@@ -33,41 +37,10 @@ export const featured: Project[] = [
     visual: 'compare',
   },
   {
-    slug: 'pixel-flow',
-    name: 'Pixel Flow',
-    summary:
-      'A node-based image editor that runs in the browser. You describe a look in plain words and an LLM agent builds the editing pipeline as a graph you can inspect and rerun.',
-    result:
-      'Edits are deterministic graphs, not diffusion output: the same recipe gives the same result on every image, and a whole pipeline shares as one URL.',
-    details: [
-      'The agent works through three tools (list node types, read graph, apply patch) and changes the graph atomically.',
-      'Nodes for cinematic grading: per-channel curves, split toning, vignette, seeded film grain, gradient maps.',
-      'Gemini calls go through a server-side proxy, so the API key never reaches the browser.',
-    ],
-    stack: ['TypeScript', 'Next.js', 'React Flow', 'Zustand', 'Gemini'],
-    repo: 'https://github.com/ravenZ3/pixel-flow',
-    visual: 'before-after',
-  },
-  {
-    slug: 'rediscpp',
-    name: 'redisCpp',
-    summary:
-      'A Redis-compatible server written from scratch in C++23. It speaks RESP2, so redis-cli and redis-benchmark work against it unchanged.',
-    result:
-      'With 1,000 idle connections open, the epoll build holds 11.6k req/s while the select() build falls to 1.8k.',
-    details: [
-      'Single-threaded, non-blocking event loop: commands are atomic without locks.',
-      'Blocking BLPOP with FIFO waiters, timeouts that set the loop’s sleep, PX expiry, and streams.',
-      'Same command code compiled against epoll and select(), so the benchmark measures only the multiplexer.',
-      'GoogleTest unit tests plus end-to-end tests that check exact reply bytes, including malformed input.',
-    ],
-    stack: ['C++23', 'epoll', 'CMake', 'GoogleTest'],
-    repo: 'https://github.com/ravenZ3/redisCpp',
-    visual: 'bench',
-  },
-  {
     slug: 'repsheet',
     name: 'RepSheet',
+    tagline: 'Spaced repetition for LeetCode and Codeforces, with a browser extension that logs solves.',
+    cover: '/images/projects/cover-repsheet.jpg',
     summary:
       'Spaced repetition for competitive programming. It tracks the problems you solve on LeetCode and Codeforces and tells you which ones to re-solve today, before you forget the trick.',
     result:
@@ -97,8 +70,47 @@ export const featured: Project[] = [
     caption: 'Left: every solved problem placed under its technique. Right: today’s review queue, rated 1 to 4.',
   },
   {
+    slug: 'pixel-flow',
+    name: 'Pixel Flow',
+    tagline: 'Describe a look in words; an LLM agent builds an image-editing graph you can rerun.',
+    cover: '/images/projects/cover-pixelflow.jpg',
+    summary:
+      'A node-based image editor that runs in the browser. You describe a look in plain words and an LLM agent builds the editing pipeline as a graph you can inspect and rerun.',
+    result:
+      'Edits are deterministic graphs, not diffusion output: the same recipe gives the same result on every image, and a whole pipeline shares as one URL.',
+    details: [
+      'The agent works through three tools (list node types, read graph, apply patch) and changes the graph atomically.',
+      'Nodes for cinematic grading: per-channel curves, split toning, vignette, seeded film grain, gradient maps.',
+      'Gemini calls go through a server-side proxy, so the API key never reaches the browser.',
+    ],
+    stack: ['TypeScript', 'Next.js', 'React Flow', 'Zustand', 'Gemini'],
+    repo: 'https://github.com/ravenZ3/pixel-flow',
+    visual: 'before-after',
+  },
+  {
+    slug: 'rediscpp',
+    name: 'redisCpp',
+    tagline: 'A Redis server in C++23. 11.6k req/s at 1,000 idle connections, where select() manages 1.8k.',
+    cover: 'bench',
+    summary:
+      'A Redis-compatible server written from scratch in C++23. It speaks RESP2, so redis-cli and redis-benchmark work against it unchanged.',
+    result:
+      'With 1,000 idle connections open, the epoll build holds 11.6k req/s while the select() build falls to 1.8k.',
+    details: [
+      'Single-threaded, non-blocking event loop: commands are atomic without locks.',
+      'Blocking BLPOP with FIFO waiters, timeouts that set the loop’s sleep, PX expiry, and streams.',
+      'Same command code compiled against epoll and select(), so the benchmark measures only the multiplexer.',
+      'GoogleTest unit tests plus end-to-end tests that check exact reply bytes, including malformed input.',
+    ],
+    stack: ['C++23', 'epoll', 'CMake', 'GoogleTest'],
+    repo: 'https://github.com/ravenZ3/redisCpp',
+    visual: 'bench',
+  },
+  {
     slug: 'drop',
     name: 'drop',
+    tagline: 'Browser-to-browser file transfer over WebRTC. No server ever sees the file.',
+    cover: '/images/projects/cover-drop.jpg',
     summary:
       'Browser-to-browser file transfer. No upload, no login, and no server ever sees the file.',
     result:

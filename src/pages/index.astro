@@ -1,79 +1,93 @@
 ---
 import Base from '../layouts/Base.astro';
-import ProjectEntry from '../components/ProjectEntry.astro';
 import Contact from '../components/Contact.astro';
-import { featured, more } from '../data/projects';
-import { getAllNotes, noteUrl } from '../lib/garden';
+import { featured, more, bench } from '../data/projects';
+const b1000 = bench[bench.length - 1];
+const bMax = Math.max(b1000.epoll, b1000.select);
+import { getAllNotes, noteUrl, COLLECTION_LABEL } from '../lib/garden';
 
 const notes = (await getAllNotes())
   .filter(n => n.collection !== 'projects')
-  .filter(n => n.data.date)
-  .sort((a, b) => b.data.date!.getTime() - a.data.date!.getTime())
-  .slice(0, 5);
+  .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
 
-const kind: Record<string, string> = {
-  papers: 'Paper notes',
-  literary: 'Prose',
-  reflections: 'Essay',
-  finance: 'Finance',
-};
+const fmt = (d?: Date) => d?.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
 ---
-<Base title="ravenZ3" activeNav="home" description="Ramjan Khandelwal builds things to understand them: a Redis server in C++, an agent-driven image editor, a RAG evaluation gate, and writing on papers and ideas.">
+<Base title="ravenZ3" activeNav="home" description="Ramjan Khandelwal builds things to understand them: an agent evaluation gate, an agent-driven image editor, a Redis server in C++, and writing on papers and ideas.">
   <div class="home">
 
     <section class="intro" aria-labelledby="intro-name">
       <img class="mascot mascot-deer" src="/images/mascots/deer.gif" alt="" width="500" height="600" />
       <h1 id="intro-name" class="intro-name">Ramjan Khandelwal</h1>
       <p class="intro-lead">I build things to understand them.</p>
-      <dl class="intro-qa">
-        <div>
-          <dt>How do you know an agent was right for the right reason?</dt>
-          <dd>You <a href="#agentic-rag-eval-harness">score the path it took</a>, not just the answer.</dd>
-        </div>
-        <div>
-          <dt>Can an LLM edit photos the same way twice?</dt>
-          <dd>Only if it <a href="#pixel-flow">writes a graph</a>, not pixels.</dd>
-        </div>
-        <div>
-          <dt>How does Redis serve thousands of clients on one thread?</dt>
-          <dd>I <a href="#rediscpp">wrote one in C++</a> and measured it.</dd>
-        </div>
-      </dl>
+      <ul class="intro-qa">
+        <li>How do you know an agent was right for the right reason? <a href="/projects#agentic-rag-eval-harness">Score the path it took.</a></li>
+        <li>Can an LLM edit photos the same way twice? <a href="/projects#pixel-flow">Only if it writes a graph.</a></li>
+        <li>How does Redis serve thousands of clients on one thread? <a href="/projects#rediscpp">I wrote one to find out.</a></li>
+      </ul>
       <p class="intro-body">Open to ML engineer, AI engineer, and forward deployed engineer roles.</p>
+      <Contact />
     </section>
-
-    <Contact />
 
     <section class="block" aria-labelledby="projects-heading">
-      <h2 id="projects-heading" class="block-title block-title-mascot">Projects <img class="mascot mascot-cat" src="/images/mascots/cat-hummingbird.gif" alt="" width="250" height="250" /></h2>
-      {featured.slice(0, 2).map(p => <ProjectEntry project={p} />)}
-      {featured.slice(2).map(p => <ProjectEntry project={p} compact />)}
-      <p class="block-more"><a href="/projects">Project details and smaller builds</a></p>
-    </section>
-
-    <section class="block" aria-labelledby="also-heading">
-      <h2 id="also-heading" class="block-title">Also built</h2>
-      <ul class="also">
-        {more.map(m => (
+      <div class="block-head">
+        <h2 id="projects-heading" class="block-title">Projects</h2>
+        <img class="mascot mascot-cat" src="/images/mascots/cat-hummingbird.gif" alt="" width="250" height="250" />
+      </div>
+      <ul class="tiles">
+        {featured.map(p => (
           <li>
-            <a href={m.repo} target="_blank" rel="noopener">{m.name}</a>
-            <span>{m.summary}</span>
+            <a class="tile" href={`/projects#${p.slug}`}>
+              <span class="cover" aria-hidden="true">
+                {p.cover === 'bench' ? (
+                  <span class="cover-bench">
+                    <span class="cb-row"><span class="cb-label">epoll</span><span class="cb-bar cb-epoll" style={`width:${(b1000.epoll / bMax) * 100}%`}></span><span class="cb-val">{(b1000.epoll / 1000).toFixed(1)}k</span></span>
+                    <span class="cb-row"><span class="cb-label">select</span><span class="cb-bar cb-select" style={`width:${(b1000.select / bMax) * 100}%`}></span><span class="cb-val">{(b1000.select / 1000).toFixed(1)}k</span></span>
+                    <span class="cb-note">req/s with 1,000 idle connections</span>
+                  </span>
+                ) : p.cover === 'verdict' ? (
+                  <span class="cover-verdict">
+                    <span class="cv-row"><span class="cv-label">Answer score</span><span class="cv-num">0.81</span><span class="cv-pass">Pass</span></span>
+                    <span class="cv-row"><span class="cv-label">Path score</span><span class="cv-num">0.0</span><span class="cv-fail">Fail</span></span>
+                  </span>
+                ) : (
+                  <img src={p.cover} alt="" loading="lazy" />
+                )}
+              </span>
+              <span class="tile-name">{p.name}</span>
+              <span class="tile-line">{p.tagline}</span>
+              <span class="tile-stack">{p.stack.slice(0, 3).join(', ')}</span>
+            </a>
           </li>
         ))}
+        <li>
+          <a class="tile tile-more" href="/projects">
+            <span class="cover cover-more" aria-hidden="true">+{more.length}</span>
+            <span class="tile-name">More</span>
+            <span class="tile-line">{more.map(m => m.name).join(', ')}, and every project in detail.</span>
+          </a>
+        </li>
       </ul>
     </section>
 
     <section class="block" aria-labelledby="writing-heading">
-      <h2 id="writing-heading" class="block-title">Recent writing</h2>
-      <ul class="writing">
-        {notes.map(n => (
-          <li>
-            <a href={noteUrl(n.collection, n.slug)}>{n.data.title}</a>
-            <span>{kind[n.collection] ?? n.collection}</span>
-          </li>
-        ))}
-      </ul>
-      <p class="block-more"><a href="/writing">All writing</a></p>
+      <div class="block-head">
+        <h2 id="writing-heading" class="block-title">Writing</h2>
+        <a class="block-link" href="/writing">All writing</a>
+      </div>
+      <div class="shelf" role="region" aria-labelledby="writing-heading" tabindex="0">
+        <ul class="shelf-list">
+          {notes.map(n => (
+            <li>
+              <a class="card" href={noteUrl(n.collection, n.slug)}>
+                <span class="card-kind">{COLLECTION_LABEL[n.collection]}</span>
+                <span class="card-title">{n.data.title}</span>
+                {n.data.description && <span class="card-desc">{n.data.description}</span>}
+                {n.data.date && <span class="card-date">{fmt(n.data.date)}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
 
   </div>
@@ -81,111 +95,186 @@ const kind: Record<string, string> = {
 
 <style>
   .home {
-    max-width: 46rem;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem 3rem;
+    max-width: var(--col);
     width: 100%;
-    font-family: var(--display);
+    margin: 0 auto;
+    padding: 2.5rem var(--gutter) 3rem;
   }
 
-  .intro { padding-bottom: 2rem; position: relative; }
   .mascot { image-rendering: pixelated; pointer-events: none; user-select: none; }
-  .mascot-deer {
-    position: absolute;
-    right: 0;
-    top: -0.6rem;
-    width: auto;
-    height: 6.5rem;
-  }
-  .block-title-mascot { display: flex; justify-content: space-between; align-items: flex-end; }
-  .mascot-cat { width: auto; height: 4.5rem; margin-bottom: -0.3rem; }
-  @media (max-width: 600px) {
-    .mascot-deer { height: 4.2rem; top: -0.3rem; }
-    .intro-name { padding-right: 4.5rem; }
-    .mascot-cat { height: 3.6rem; }
-  }
+
+  /* Intro */
+  .intro { position: relative; padding-bottom: 2.25rem; }
+  .mascot-deer { position: absolute; right: 0; top: -0.6rem; width: auto; height: 6rem; }
   .intro-name {
     font-family: var(--head);
     font-size: clamp(2.4rem, 7.5vw, 3.6rem);
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 1;
-    color: var(--text);
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.4rem;
+    padding-right: 6rem;
   }
   .intro-lead {
     font-family: var(--subhead);
-    font-size: clamp(1.6rem, 4.5vw, 2.1rem);
-    font-weight: 400;
-    letter-spacing: 0;
+    font-size: clamp(1.5rem, 4.2vw, 1.95rem);
     line-height: 1.2;
-    color: var(--text);
-    margin: 0 0 1.25rem;
-    max-width: 32ch;
+    margin: 0 0 1.1rem;
   }
-  .intro-qa { margin: 0 0 1.25rem; display: grid; gap: 0.6rem; max-width: 52ch; }
-  .intro-qa dt { font-family: var(--subhead); font-size: 1.2rem; font-weight: 400; line-height: 1.3; color: var(--text); }
-  .intro-qa dd { margin: 0; font-size: 0.92rem; line-height: 1.55; color: var(--muted); }
-  .intro-qa a { color: var(--text); font-weight: 500; text-decoration: none; text-decoration-color: var(--faint); text-underline-offset: 4px; }
-  .intro-qa a:hover { color: var(--muted); text-decoration-color: var(--text); }
-  .intro-body {
-    font-size: 0.92rem;
-    line-height: 1.65;
-    color: var(--muted);
-    margin: 0 0 0.6rem;
-    max-width: 56ch;
-  }
-  .intro-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.4rem;
-    font-size: 0.82rem;
-  }
-  .intro-body a, .block-more a, .also a, .writing a {
-    color: var(--text);
-    text-decoration: none;
-    text-decoration-color: var(--faint);
-    text-underline-offset: 4px;
-    text-decoration-thickness: 1px;
-  }
-  .intro-body a:hover, .block-more a:hover, .also a:hover, .writing a:hover {
-    color: var(--muted);
-  }
+  .intro-qa { list-style: none; padding: 0; margin: 0 0 1rem; display: grid; gap: 0.3rem; }
+  .intro-qa li { font-size: 0.86rem; line-height: 1.5; color: var(--muted); }
+  .intro-qa a { color: var(--text); font-weight: 500; text-decoration: none; }
+  .intro-qa a:hover { color: var(--muted); }
+  .intro-body { font-size: 0.86rem; color: var(--muted); margin: 0 0 1rem; }
 
-  .block { padding-top: 0.5rem; }
+  /* Section heads */
   .block + .block { padding-top: 2rem; }
+  .block-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.9rem;
+  }
   .block-title {
     font-family: var(--subhead);
     font-size: 1.6rem;
     font-weight: 400;
-    color: var(--text);
-    letter-spacing: 0;
     line-height: 1.2;
-    margin: 0 0 0.25rem;
+    padding-bottom: 0.3rem;
   }
-  .block-more { font-size: 0.82rem; margin: 0; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+  .mascot-cat { width: auto; height: 4rem; margin-bottom: -2px; }
+  .block-link { font-size: 0.78rem; color: var(--muted); text-decoration: none; padding-bottom: 0.45rem; }
+  .block-link:hover { color: var(--text); }
 
-  .also, .writing { list-style: none; padding: 0; margin: 0.25rem 0 0; }
-  .also li, .writing li {
+  /* Project tiles */
+  .tiles {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: grid;
-    gap: 0.1rem;
-    padding: 0.5rem 0;
-    border-top: 1px solid var(--border);
-    font-size: 0.88rem;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 0.6rem;
+  }
+  .tiles li { display: flex; }
+  .tile {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.5rem 0.5rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s, background-color 0.15s;
+  }
+  .tile:hover { border-color: var(--muted); background: var(--surface); }
+  .tile > span:not(.cover) { padding: 0 0.5rem; }
+  .cover {
+    display: block;
+    aspect-ratio: 2 / 1;
+    margin-bottom: 0.45rem;
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tile:hover .cover { border-color: var(--muted); }
+
+  .cover-bench, .cover-verdict {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0 0.8rem;
+  }
+  .cb-row { display: grid; grid-template-columns: 2.6rem 1fr 2rem; align-items: center; gap: 0.5rem; }
+  .cb-label, .cb-note { font-size: 0.64rem; color: var(--muted); }
+  .cb-bar { display: block; height: 0.85rem; border-radius: 1px; }
+  .cb-epoll { background: var(--text); }
+  .cb-select { background: var(--faint); }
+  .cb-val { font-size: 0.64rem; font-weight: 600; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+  .cb-note { color: var(--faint); margin-top: 0.1rem; }
+
+  .cv-row { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 0.6rem; }
+  .cv-label { font-size: 0.7rem; color: var(--muted); }
+  .cv-num { font-family: var(--head); font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .cv-pass, .cv-fail { font-size: 0.62rem; font-weight: 700; padding: 0.18rem 0.4rem; border-radius: 2px; min-width: 2.6rem; text-align: center; }
+  .cv-pass { border: 1px solid var(--faint); color: var(--muted); }
+  .cv-fail { background: var(--text); color: var(--bg); }
+
+  .cover-more {
+    display: grid;
+    place-items: center;
+    font-family: var(--head);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--faint);
+    border-style: dashed;
+    background: transparent;
+  }
+
+  .tile-name { font-family: var(--head); font-size: 1.08rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+  .tile-line { font-size: 0.78rem; line-height: 1.5; color: var(--muted); flex: 1; }
+  .tile-stack { font-size: 0.68rem; color: var(--faint); }
+  .tile-more { border-style: dashed; }
+
+  /* Writing shelf: scrolls sideways */
+  .shelf {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    margin: 0 calc(-1 * var(--gutter));
+    padding: 0 var(--gutter) 0.6rem;
+    scroll-padding: 0 var(--gutter);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
+  }
+  .shelf:focus-visible { outline-offset: -2px; }
+  .shelf-list { list-style: none; padding: 0; margin: 0; display: flex; gap: 0.75rem; }
+  .shelf-list li { flex: 0 0 15.5rem; scroll-snap-align: start; display: flex; }
+  .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-height: 12rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: var(--muted); }
+  .card-kind { font-size: 0.68rem; color: var(--faint); }
+  .card-title { font-family: var(--subhead); font-size: 1.55rem; line-height: 1.1; }
+  .card-desc {
+    font-size: 0.76rem;
     line-height: 1.5;
+    color: var(--muted);
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  .also li span { color: var(--muted); font-size: 0.82rem; max-width: 62ch; }
-  .writing li {
-    grid-template-columns: 1fr auto;
-    align-items: baseline;
-    gap: 1rem;
-  }
-  .writing li span { color: var(--faint); font-size: 0.75rem; white-space: nowrap; }
+  .card-date { font-size: 0.68rem; color: var(--faint); }
 
   @media (max-width: 600px) {
-    .home { padding: 1.75rem 1rem 2.5rem; }
+    .home { padding: 1.75rem var(--gutter) 2.5rem; }
+    .mascot-deer { height: 4.2rem; top: -0.3rem; }
+    .intro-name { padding-right: 4.5rem; }
+    .mascot-cat { height: 3.3rem; }
+    .shelf-list li { flex-basis: 78%; }
+    .tiles { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .tile { padding: 0.75rem 0.8rem 0.8rem; }
+    .tile-name { font-size: 0.98rem; }
+    .tile-line { font-size: 0.74rem; }
   }
 </style>
