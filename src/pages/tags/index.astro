@@ -2,60 +2,22 @@
 import Base from '../../layouts/Base.astro';
 import { getAllNotes } from '../../lib/garden';
 
-const allNotes = await getAllNotes();
-
-const tagMap = new Map<string, number>();
-for (const note of allNotes) {
-  for (const tag of note.data.tags) {
-    tagMap.set(tag, (tagMap.get(tag) ?? 0) + 1);
-  }
-}
-
-const tags = [...tagMap.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+const all = await getAllNotes();
+const counts = new Map<string, number>();
+for (const n of all) for (const t of n.data.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+const tags = [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
 ---
-<Base title="Tags" description={`Browse all ${tags.length} tags across the garden: a cross-collection index of topics and themes.`} activeNav="tags">
-  <div class="container">
-
-    <header class="tags-header">
-      <h1 class="page-title">Tags</h1>
-      <p class="page-subtitle">{tags.length} tag{tags.length !== 1 ? 's' : ''} across all collections</p>
-    </header>
-
-    <ul class="tag-index">
+<Base title="Tags" description={`Notes by Ramjan Khandelwal grouped by ${tags.length} topics.`} activeNav="writing">
+  <div class="page">
+    <h1 class="page-title">Tags</h1>
+    <p class="page-lead">Every note, grouped by topic.</p>
+    <ul class="rows">
       {tags.map(([tag, count]) => (
-        <li class="tag-row">
-          <a href={`/tags/${tag}`} class="tag">{tag}</a>
-          <span class="tag-count">{count}</span>
+        <li class="row">
+          <a class="row-title" href={`/tags/${tag}`}>#{tag}</a>
+          <span class="row-meta">{count} {count === 1 ? 'note' : 'notes'}</span>
         </li>
       ))}
     </ul>
-
   </div>
 </Base>
-
-<style>
-  .tags-header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
-
-  .tag-index {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .tag-row {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    padding: 0.55rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .tag-count {
-    font-family: var(--sans);
-    font-size: 0.62rem;
-    color: var(--faint);
-    letter-spacing: 0.04em;
-  }
-</style>

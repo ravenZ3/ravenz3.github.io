@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import NoteRows from '../components/NoteRows.astro';
+import { getAllNotes, COLLECTION_LABEL } from '../lib/garden';
+import type { GardenCollection } from '../lib/garden';
+
+const all = await getAllNotes();
+const byDate = (a: any, b: any) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0);
+const sections: GardenCollection[] = ['papers', 'reflections', 'literary', 'finance'];
+const groups = sections
+  .map(c => ({ c, notes: all.filter(n => n.collection === c).sort(byDate) }))
+  .filter(g => g.notes.length > 0);
+---
+<Base title="Writing" description="Paper notes, essays, and short prose by Ramjan Khandelwal." activeNav="writing">
+  <div class="page">
+    <h1 class="page-title">Writing</h1>
+    <p class="page-lead">Notes from papers I read, essays, and some short prose.</p>
+    {groups.map(g => (
+      <section aria-labelledby={`h-${g.c}`}>
+        <h2 class="section-title" id={`h-${g.c}`}><a href={`/${g.c}`}>{COLLECTION_LABEL[g.c]}</a></h2>
+        <NoteRows notes={g.notes} />
+      </section>
+    ))}
+    <p class="page-more" style="margin-top:2rem"><a href="/tags">Browse by tag</a></p>
+  </div>
+</Base>

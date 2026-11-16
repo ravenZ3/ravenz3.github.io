@@ -13,7 +13,7 @@ interface Props {
 const { title, description, activeNav, canonicalUrl, ogType, publishedTime, modifiedTime, tags } = Astro.props;
 const siteName = 'ravenZ3';
 const pageTitle = title === siteName ? siteName : `${title} · ${siteName}`;
-const defaultDesc = 'A digital garden of notes in various stages: prose, reflections, and papers by Ramjan Khandelwal.';
+const defaultDesc = 'Ramjan Khandelwal: software engineer building backend systems and ML tooling. Projects, benchmarks, and writing.';
 const siteUrl = 'https://ravenz3.github.io';
 const resolvedCanonical = canonicalUrl ?? Astro.url.href;
 const resolvedDesc = description ?? defaultDesc;
@@ -32,10 +32,9 @@ const websiteJsonLd = {
 };
 
 const navItems = [
-  { label: 'Papers',       href: '/papers' },
+  { label: 'Home',         href: '/' },
   { label: 'Projects',     href: '/projects' },
-  { label: 'Literary',     href: '/literary' },
-  { label: 'Reflections',  href: '/reflections' },
+  { label: 'Writing',      href: '/writing' },
   { label: 'About',        href: '/about' },
 ];
 ---
@@ -72,19 +71,13 @@ const navItems = [
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Jersey+10&family=Instrument+Serif:ital@0;1&display=swap" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
   <!-- Apply saved theme before paint to avoid flash -->
   <script is:inline>
     (function() {
-      var t = localStorage.getItem('rz-theme');
+      var t = null; try { t = localStorage.getItem('rz-theme'); } catch (e) {}
       if (t) document.documentElement.setAttribute('data-theme', t);
-      var f = localStorage.getItem('rz-fontsize');
-      if (f) document.documentElement.style.fontSize = f + 'px';
-      var c = localStorage.getItem('rz-contrast');
-      if (c) document.documentElement.setAttribute('data-contrast', c);
-      var f_fam = localStorage.getItem('rz-font');
-      if (f_fam) document.documentElement.setAttribute('data-font', f_fam);
     })();
   </script>
   <style is:global>
@@ -94,403 +87,54 @@ const navItems = [
 <body>
   <header class="site-header">
     <div class="site-header-inner">
-      <a href="/" class="site-logo" aria-label="ravenZ3 home">rZ</a>
-      <span class="nav-pipe" aria-hidden="true">|</span>
-      <nav class="site-nav">
-        {navItems.map((item, i) => (
-          <>
-            {i > 0 && <span class="nav-sep" aria-hidden="true">·</span>}
-            <a
-              href={item.href}
-              {...(activeNav === item.label.toLowerCase() ? { 'data-active': '' } : {})}
-            >
-              {item.label}
-            </a>
-          </>
+      <nav class="site-nav" aria-label="Main">
+        {navItems.map(item => (
+          <a
+            href={item.href}
+            {...(activeNav === item.label.toLowerCase() ? { 'data-active': '', 'aria-current': 'page' } : {})}
+          >
+            {item.label}
+          </a>
         ))}
+        <a href="https://github.com/ravenZ3" target="_blank" rel="noopener">GitHub</a>
       </nav>
+      <button class="nav-theme" id="nav-theme" type="button" aria-label="Switch light or dark theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
     </div>
   </header>
+  <script is:inline>
+    (function () {
+      var btn = document.getElementById('nav-theme');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var root = document.documentElement;
+        var cur = root.getAttribute('data-theme') ||
+          (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        var next = cur === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('rz-theme', next); } catch (e) {}
+      });
+    })();
+  </script>
 
   <main class="site-main">
-    {title === siteName && (
-      <p class="site-tagline">writings on AI, human behaviour, neuroscience, and my perspective on things.</p>
-    )}
     <slot />
   </main>
 
   <footer class="site-footer">
-    <span class="footer-prompt">ramjan@rZ</span><span class="footer-sep"> ~ </span><a href="mailto:ramjankhandelwal7@gmail.com" class="footer-link">email</a><span class="footer-sep"> · </span><a href="https://github.com/ravenZ3" target="_blank" rel="noopener" class="footer-link">github</a><span class="footer-sep"> · </span><a href="/about" class="footer-link">about</a><span class="footer-sep"> · </span><span class="footer-dim">built with Astro · deployed via GitHub Actions</span>
+    <div class="site-footer-inner">
+      <img class="footer-cat" src="/images/mascots/cat-sleeping.gif" alt="" width="500" height="417" />
+      <span>Ramjan Khandelwal</span>
+      <nav aria-label="Footer">
+        <a href="mailto:ramjankhandelwal7@gmail.com">Email</a>
+        <a href="https://github.com/ravenZ3" target="_blank" rel="noopener">GitHub</a>
+        <a href="/tags">Tags</a>
+      </nav>
+    </div>
   </footer>
 
-  <!-- Fixed right icon sidebar -->
-  <aside class="settings-bar collapsed" id="settings-bar" aria-label="Site controls">
-
-    <!-- Gear — toggles bar expand/collapse -->
-    <button class="settings-btn" id="btn-toggle" title="Toggle sidebar" aria-expanded="false">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.07-1.55-.9-.52a7.1 7.1 0 0 0 0-1.86l.9-.52a1 1 0 0 0 .37-1.37l-1-1.73a1 1 0 0 0-1.37-.37l-.9.52a7 7 0 0 0-1.61-.93V6a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v1.07a7 7 0 0 0-1.61.93l-.9-.52a1 1 0 0 0-1.37.37l-1 1.73a1 1 0 0 0 .37 1.37l.9.52a7.1 7.1 0 0 0 0 1.86l-.9.52a1 1 0 0 0-.37 1.37l1 1.73a1 1 0 0 0 1.37.37l.9-.52a7 7 0 0 0 1.61.93V18a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-1.07a7 7 0 0 0 1.61-.93l.9.52a1 1 0 0 0 1.37-.37l1-1.73a1 1 0 0 0-.37-1.37z"/>
-      </svg>
-    </button>
-
-    <div class="settings-divider bar-item"></div>
-
-    <!-- Search — toggles search bar -->
-    <button class="settings-btn bar-item" id="btn-settings" title="Search" aria-expanded="false">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
-        <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
-
-    <!-- Language / Font switching -->
-    <button class="settings-btn bar-item" id="btn-lang" title="Font" aria-expanded="false">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <text x="2" y="16" font-size="13" fill="currentColor" font-family="serif" font-weight="400">Aa</text>
-      </svg>
-    </button>
-
-    <div class="settings-divider bar-item"></div>
-
-    <!-- Dark mode -->
-    <button class="settings-btn bar-item" id="btn-dark" title="Dark theme" data-theme-target="dark">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
-      </svg>
-    </button>
-
-    <!-- Light mode -->
-    <button class="settings-btn bar-item" id="btn-light" title="Light theme" data-theme-target="light">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="5"/>
-        <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
-
-    <div class="settings-divider bar-item"></div>
-
-    <!-- Font size decrease -->
-    <button class="settings-btn bar-item" id="btn-font-down" title="Smaller text">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <text x="2" y="18" font-size="18" fill="currentColor" font-family="serif">A</text>
-        <text x="14" y="14" font-size="10" fill="currentColor" font-family="serif">a</text>
-      </svg>
-    </button>
-
-    <!-- Font size increase -->
-    <button class="settings-btn bar-item" id="btn-font-up" title="Larger text">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <text x="1" y="18" font-size="22" fill="currentColor" font-family="serif">A</text>
-        <text x="15" y="14" font-size="11" fill="currentColor" font-family="serif">a</text>
-      </svg>
-    </button>
-
-    <div class="settings-divider bar-item"></div>
-
-    <!-- Contrast decrease -->
-    <button class="settings-btn bar-item" id="btn-contrast-down" title="Lower contrast">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4"/>
-        <circle cx="12" cy="12" r="5" fill="currentColor" opacity="0.4"/>
-      </svg>
-    </button>
-
-    <!-- Contrast increase -->
-    <button class="settings-btn bar-item" id="btn-contrast-up" title="Higher contrast">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
-        <circle cx="12" cy="12" r="5" fill="currentColor"/>
-      </svg>
-    </button>
-
-    <div class="settings-divider bar-item"></div>
-
-    <!-- TOC toggle (mobile) -->
-    <button class="settings-btn bar-item" id="btn-toc" title="Table of contents">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <line x1="3" y1="6"  x2="21" y2="6"  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line x1="3" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line x1="3" y1="18" x2="11" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
-
-    <!-- Help / About -->
-    <button class="settings-btn bar-item" id="btn-help" title="About this site" onclick="location.href='/about'">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
-
-  </aside>
-
-  <!-- Language / Font panel -->
-  <div class="settings-panel" id="lang-panel">
-    <h3>Font</h3>
-    <div class="settings-font-row">
-      <button class="settings-font-btn" data-font-target="merriweather">Merriweather</button>
-      <button class="settings-font-btn" data-font-target="garamond">Garamond</button>
-      <button class="settings-font-btn" data-font-target="geist">Geist</button>
-    </div>
-  </div>
-
-  <!-- Search panel -->
-  <div class="search-panel" id="search-panel" role="search">
-    <input class="search-input" id="search-input" type="search" placeholder="Search notes…" autocomplete="off" />
-    <div id="search-results" style="margin-top:0.75rem; font-family: var(--serif); font-size:0.85rem; color:var(--muted);"></div>
-  </div>
-
-  <script>
-    const root = document.documentElement;
-
-    // ── Gear button — toggle bar expand/collapse ─────────────────
-    const toggleBtn  = document.getElementById('btn-toggle') as HTMLButtonElement;
-    const settingsBar = document.getElementById('settings-bar') as HTMLElement;
-    const BAR_KEY = 'rz-bar-collapsed';
-
-    function toggleBar() {
-      const isCollapsed = settingsBar.classList.toggle('collapsed');
-      localStorage.setItem(BAR_KEY, String(isCollapsed));
-      toggleBtn.setAttribute('aria-expanded', String(!isCollapsed));
-      if (isCollapsed) closePanels();
-    }
-
-    toggleBtn?.addEventListener('click', toggleBar);
-
-    // Restore saved bar state on load (default: collapsed)
-    const wasCollapsed = localStorage.getItem(BAR_KEY) !== 'false';
-    if (!wasCollapsed) {
-      settingsBar.classList.remove('collapsed');
-      toggleBtn.setAttribute('aria-expanded', 'true');
-    }
-
-    // ── Font selection ──────────────────────────────────────────────
-    const FONT_KEY = 'rz-font';
-
-    function setFont(f: string) {
-      root.setAttribute('data-font', f);
-      localStorage.setItem(FONT_KEY, f);
-      document.querySelectorAll('.settings-font-btn').forEach(b => {
-        (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.fontTarget === f);
-      });
-    }
-
-    document.querySelectorAll('.settings-font-btn').forEach(btn => {
-      btn.addEventListener('click', () => setFont((btn as HTMLElement).dataset.fontTarget!));
-    });
-
-    const savedFont = localStorage.getItem(FONT_KEY) || 'merriweather';
-    setFont(savedFont);
-
-    // ── Theme toggle ──────────────────────────────────────────────
-    const STORAGE_KEY = 'rz-theme';
-
-    function setTheme(t: string) {
-      root.setAttribute('data-theme', t);
-      localStorage.setItem(STORAGE_KEY, t);
-      document.querySelectorAll('.settings-btn[data-theme-target]').forEach(b => {
-        (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.themeTarget === t);
-      });
-      applyContrast(contrastLevel);
-    }
-
-    document.querySelectorAll('.settings-btn[data-theme-target]').forEach(btn => {
-      btn.addEventListener('click', () => setTheme((btn as HTMLElement).dataset.themeTarget!));
-    });
-
-    const curTheme = root.getAttribute('data-theme') ||
-      (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    document.querySelectorAll('.settings-btn[data-theme-target]').forEach(b => {
-      (b as HTMLElement).classList.toggle('active', (b as HTMLElement).dataset.themeTarget === curTheme);
-    });
-
-    // ── Font size ─────────────────────────────────────────────────
-    const FONT_SIZE_STORAGE = 'rz-fontsize';
-    let fontSize = parseInt(localStorage.getItem(FONT_SIZE_STORAGE) || '19', 10);
-    document.documentElement.style.fontSize = fontSize + 'px';
-
-    document.getElementById('btn-font-up')?.addEventListener('click', () => {
-      fontSize = Math.min(fontSize + 1, 24);
-      document.documentElement.style.fontSize = fontSize + 'px';
-      localStorage.setItem(FONT_SIZE_STORAGE, String(fontSize));
-    });
-    document.getElementById('btn-font-down')?.addEventListener('click', () => {
-      fontSize = Math.max(fontSize - 1, 15);
-      document.documentElement.style.fontSize = fontSize + 'px';
-      localStorage.setItem(FONT_SIZE_STORAGE, String(fontSize));
-    });
-
-    // ── Contrast adjustment ───────────────────────────────────────
-    const CONTRAST_KEY = 'rz-contrast';
-
-    type ContrastLevel = { text: string; muted: string; faint: string; link: string; accent: string };
-
-    const THEME_CONTRAST: Record<string, ContrastLevel[]> = {
-      dark: [
-        { text: '#a09a90', muted: '#807a70', faint: '#5a5650', link: '#8a8070', accent: '#9a8a78' },
-        { text: '#c0bab0', muted: '#a09a8e', faint: '#706b62', link: '#9a9080', accent: '#b0a090' },
-        { text: '#e0dad0', muted: '#c8c3b8', faint: '#958f85', link: '#b0a898', accent: '#c8b8a8' },
-        { text: '#f5f0e8', muted: '#e8e3d8', faint: '#c8c0b5', link: '#ddd5c8', accent: '#eee5d8' },
-        { text: '#ffffff', muted: '#f0f0f0', faint: '#e0e0e0', link: '#ffffff', accent: '#ffffff' },
-      ],
-      light: [
-        { text: '#52525b', muted: '#71717a', faint: '#a1a1aa', link: '#52525b', accent: '#71717a' },
-        { text: '#3f3f46', muted: '#52525b', faint: '#71717a', link: '#3f3f46', accent: '#52525b' },
-        { text: '#18181b', muted: '#52525b', faint: '#a1a1aa', link: '#18181b', accent: '#3f3f46' },
-        { text: '#09090b', muted: '#3f3f46', faint: '#71717a', link: '#09090b', accent: '#27272a' },
-        { text: '#000000', muted: '#18181b', faint: '#52525b', link: '#000000', accent: '#000000' },
-      ],
-    };
-
-    let contrastLevel = parseInt(localStorage.getItem(CONTRAST_KEY) || '2', 10);
-
-    function getCurrentTheme(): string {
-      return root.getAttribute('data-theme') ||
-        (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    }
-
-    function applyContrast(level: number) {
-      const theme = getCurrentTheme();
-      const levels = THEME_CONTRAST[theme] || THEME_CONTRAST.dark;
-      contrastLevel = Math.max(0, Math.min(level, levels.length - 1));
-      const c = levels[contrastLevel];
-      root.style.setProperty('--text', c.text);
-      root.style.setProperty('--muted', c.muted);
-      root.style.setProperty('--faint', c.faint);
-      root.style.setProperty('--link', c.link);
-      root.style.setProperty('--accent', c.accent);
-      root.setAttribute('data-contrast', String(contrastLevel));
-      localStorage.setItem(CONTRAST_KEY, String(contrastLevel));
-    }
-
-    applyContrast(contrastLevel);
-
-    document.getElementById('btn-contrast-up')?.addEventListener('click', () => applyContrast(contrastLevel + 1));
-    document.getElementById('btn-contrast-down')?.addEventListener('click', () => applyContrast(contrastLevel - 1));
-
-    // ── Panel helpers ─────────────────────────────────────────────
-    const searchBtn  = document.getElementById('btn-settings') as HTMLButtonElement;
-    const langBtn    = document.getElementById('btn-lang') as HTMLButtonElement;
-    const searchPanel = document.getElementById('search-panel') as HTMLElement;
-    const langPanel   = document.getElementById('lang-panel') as HTMLElement;
-    const searchInput = document.getElementById('search-input') as HTMLInputElement;
-    const searchResults = document.getElementById('search-results') as HTMLElement;
-
-    function closePanels() {
-      searchPanel?.classList.remove('open');
-      langPanel?.classList.remove('open');
-      searchBtn?.classList.remove('active');
-      langBtn?.classList.remove('active');
-      searchBtn?.setAttribute('aria-expanded', 'false');
-      langBtn?.setAttribute('aria-expanded', 'false');
-    }
-
-    // ── Search index ──────────────────────────────────────────────
-    let searchIndex: any[] = [];
-    let indexLoaded = false;
-
-    async function loadSearchIndex() {
-      if (indexLoaded) return;
-      try {
-        const res = await fetch('/api/search.json');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        searchIndex = await res.json();
-        indexLoaded = true;
-      } catch (e) {
-        console.error('Failed to load search index', e);
-      }
-    }
-
-    function doSearch(query: string) {
-      if (!query.trim()) { searchResults.innerHTML = ''; return; }
-      const q = query.toLowerCase();
-      const matches = searchIndex.filter(n =>
-        n.title.toLowerCase().includes(q) ||
-        n.description.toLowerCase().includes(q) ||
-        n.excerpt.toLowerCase().includes(q)
-      ).slice(0, 8);
-      searchResults.innerHTML = matches.length
-        ? matches.map(n => `
-            <a href="/${n.collection}/${n.slug}" class="search-result-item">
-              <div class="sr-title">${n.title}</div>
-              <div class="sr-excerpt">${n.description || n.excerpt.slice(0, 80) + '...'}</div>
-            </a>`).join('')
-        : '<div style="padding:0.5rem; color:var(--faint);">No matches found.</div>';
-    }
-
-    searchInput?.addEventListener('input', (e) => doSearch((e.target as HTMLInputElement).value));
-
-    // ── Search button (gear icon) toggles search bar ──────────────
-    const openSearch = async () => {
-      closePanels();
-      searchPanel.classList.add('open');
-      searchBtn.classList.add('active');
-      searchBtn.setAttribute('aria-expanded', 'true');
-      await loadSearchIndex();
-      searchInput?.focus();
-    };
-
-    searchBtn?.addEventListener('click', async () => {
-      if (searchPanel.classList.contains('open')) closePanels();
-      else await openSearch();
-    });
-
-    // ── Language button toggles font panel ───────────────────────
-    langBtn?.addEventListener('click', () => {
-      if (langPanel.classList.contains('open')) closePanels();
-      else {
-        closePanels();
-        langPanel.classList.add('open');
-        langBtn.classList.add('active');
-        langBtn.setAttribute('aria-expanded', 'true');
-      }
-    });
-
-    // ── Click outside closes panels ───────────────────────────────
-    document.addEventListener('click', (e) => {
-      const target = e.target as Node;
-      const insideSearch = searchPanel.contains(target) || searchBtn.contains(target);
-      const insideLang   = langPanel.contains(target)   || langBtn.contains(target);
-      if (!insideSearch && !insideLang) closePanels();
-    });
-
-    // ── Keyboard shortcuts ────────────────────────────────────────
-    document.addEventListener('keydown', async (e) => {
-      if (e.key === 'Escape') closePanels();
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        await openSearch();
-      }
-    });
-
-    // ── Mobile TOC toggle ─────────────────────────────────────────
-    document.getElementById('btn-toc')?.addEventListener('click', () => {
-      const sidebar = document.querySelector('.note-sidebar-left') as HTMLElement;
-      if (sidebar) {
-        const isHidden = sidebar.style.display === 'none' || getComputedStyle(sidebar).display === 'none';
-        sidebar.style.display = isHidden ? 'block' : '';
-      }
-    });
-
-    // ── Intro buttons (homepage) ──────────────────────────────────
-    document.querySelectorAll('.intro-btn[data-theme-set]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const t = (btn as HTMLElement).dataset.themeSet!;
-        if (t === 'auto') { localStorage.removeItem(STORAGE_KEY); location.reload(); }
-        else setTheme(t);
-      });
-    });
-
-    document.getElementById('intro-search-btn')?.addEventListener('click', openSearch);
-  </script>
 
 </body>
 </html>

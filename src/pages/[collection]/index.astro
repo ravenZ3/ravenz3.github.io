@@ -1,67 +1,27 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getAllNotes, COLLECTIONS, STAGE_SYMBOL, STAGE_LABEL, noteUrl } from '../../lib/garden';
+import NoteRows from '../../components/NoteRows.astro';
+import { getAllNotes, COLLECTIONS, COLLECTION_LABEL, COLLECTION_DESC } from '../../lib/garden';
 import type { GardenCollection } from '../../lib/garden';
 
 export async function getStaticPaths() {
-  return COLLECTIONS.map(collection => ({ params: { collection } }));
+  // /projects has its own page (src/pages/projects.astro)
+  return COLLECTIONS.filter(c => c !== 'projects').map(collection => ({ params: { collection } }));
 }
 
 const { collection } = Astro.params as { collection: GardenCollection };
-
-const allNotes = await getAllNotes();
-const notes = allNotes
+const notes = (await getAllNotes())
   .filter(n => n.collection === collection)
-  .sort((a, b) => {
-    const order = { evergreen: 0, budding: 1, seedling: 2 };
-    return order[a.data.stage] - order[b.data.stage];
-  });
-
-const descriptions: Record<GardenCollection, string> = {
-  literary:     'Prose, short stories, and fictional work.',
-  reflections:  'Personal notes, observations, and thoughts in motion.',
-  finance:      'Notes on markets, investing, and financial thinking.',
-  papers:       'Summaries and analyses of academic papers and research.',
-  projects:     'Things I’ve built.',
-};
-
-const collectionLabel = collection.charAt(0).toUpperCase() + collection.slice(1);
+  .sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
+const label = COLLECTION_LABEL[collection];
 ---
-<Base title={collectionLabel} description={descriptions[collection]} activeNav={collection}>
-  <div class="container">
-
-    <header class="collection-header">
-      <h1 class="page-title">{collectionLabel}</h1>
-      <p class="page-subtitle">{descriptions[collection]}</p>
-    </header>
-
-    <ul class="note-rows">
-      {notes.map(note => (
-        <li class="note-row">
-          <span class={`note-row-stage stage-${note.data.stage}`} title={STAGE_LABEL[note.data.stage]}>
-            {STAGE_SYMBOL[note.data.stage]}
-          </span>
-          <div class="note-row-body">
-            <a class="note-row-title" href={noteUrl(collection, note.slug)}>
-              {note.data.title}
-            </a>
-            {note.data.description && (
-              <span class="note-row-desc">{note.data.description}</span>
-            )}
-          </div>
-        </li>
-      ))}
-    </ul>
-
-    <p class="back-link"><a href="/">← Garden</a></p>
-
+<Base title={label} description={COLLECTION_DESC[collection]} activeNav="writing">
+  <div class="page">
+    <h1 class="page-title">{label}</h1>
+    <p class="page-lead">{COLLECTION_DESC[collection]}</p>
+    {notes.length > 0
+      ? <NoteRows notes={notes} />
+      : <p class="page-lead">Nothing published here yet.</p>}
+    <p class="page-more" style="margin-top:2rem"><a href="/writing">All writing</a></p>
   </div>
 </Base>
-
-<style>
-  .collection-header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 0; }
-  .note-rows { list-style: none; padding: 0; margin: 0; }
-  .back-link { margin-top: 2.5rem; font-family: var(--sans); font-size: 0.68rem; }
-  .back-link a { color: var(--faint); text-decoration: none; }
-  .back-link a:hover { color: var(--muted); }
-</style>

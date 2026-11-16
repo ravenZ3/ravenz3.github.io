@@ -72,8 +72,25 @@ export const STAGE_SYMBOL: Record<string, string> = {
   evergreen: '●',
 };
 
+// Plain-language labels for how finished a note is.
 export const STAGE_LABEL: Record<string, string> = {
-  seedling: 'seedling',
-  budding:  'budding',
-  evergreen: 'evergreen',
+  seedling: 'Early draft',
+  budding:  'In progress',
+  evergreen: 'Finished',
+};
+
+export const COLLECTION_LABEL: Record<GardenCollection, string> = {
+  papers: 'Paper notes',
+  literary: 'Prose',
+  reflections: 'Essays',
+  finance: 'Finance',
+  projects: 'Projects',
+};
+
+export const COLLECTION_DESC: Record<GardenCollection, string> = {
+  papers: 'Notes from reading research papers: what they claim and how the math works.',
+  literary: 'Short prose and fiction.',
+  reflections: 'Essays and thinking out loud.',
+  finance: 'Notes on money and markets.',
+  projects: 'Things I have built.',
 };

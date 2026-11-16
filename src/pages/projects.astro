@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectEntry from '../components/ProjectEntry.astro';
+import { featured, more } from '../data/projects';
+---
+<Base title="Projects" description="Projects by Ramjan Khandelwal: a Redis-compatible C++ server, an agent-built image editor, a RAG evaluation harness, and more." activeNav="projects">
+  <div class="projects-page">
+    <h1 class="pp-title">Projects</h1>
+    <p class="pp-sub">What each one does, what I measured, and how it is built.</p>
+    {featured.map(p => <ProjectEntry project={p} full />)}
+
+    <h2 class="pp-h2">Smaller builds</h2>
+    <ul class="pp-more">
+      {more.map(m => (
+        <li>
+          <a href={m.repo} target="_blank" rel="noopener">{m.name}</a>
+          <span>{m.summary}</span>
+          <span class="pp-stack">{m.stack.join(', ')}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .projects-page { max-width: 46rem; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; width: 100%; font-family: var(--display); }
+  .pp-title { font-family: var(--pixel); font-size: clamp(2.8rem, 9vw, 4rem); font-weight: 400; letter-spacing: 0; line-height: 0.95; margin: 0 0 0.6rem; color: var(--text); }
+  .pp-sub { font-family: var(--subhead); color: var(--muted); font-size: 1.25rem; line-height: 1.3; margin: 0 0 1rem; }
+  .pp-h2 { font-family: var(--subhead); font-size: 1.6rem; font-weight: 400; color: var(--text); margin: 2rem 0 0.25rem; }
+  .pp-more { list-style: none; padding: 0; margin: 0; }
+  .pp-more li { display: grid; gap: 0.2rem; padding: 0.5rem 0; border-top: 1px solid var(--border); font-size: 0.88rem; line-height: 1.5; }
+  .pp-more a { color: var(--text); text-decoration: none; text-decoration-color: var(--faint); text-underline-offset: 4px; }
+  .pp-more a:hover { color: var(--muted); }
+  .pp-more span { color: var(--muted); font-size: 0.82rem; }
+  .pp-more .pp-stack { color: var(--faint); font-size: 0.75rem; }
+  @media (max-width: 600px) { .projects-page { padding: 1.75rem 1rem 2.5rem; } }
+</style>

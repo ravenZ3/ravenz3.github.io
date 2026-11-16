@@ -1,6 +1,6 @@
 ---
 import Base from './Base.astro';
-import { noteUrl, STAGE_SYMBOL, STAGE_LABEL } from '../lib/garden';
+import { noteUrl, STAGE_LABEL, COLLECTION_LABEL } from '../lib/garden';
 import type { GardenNote, NoteRef, GardenCollection } from '../lib/garden';
 
 interface Heading {
@@ -20,6 +20,7 @@ const { title, stage, tags, date, modified, kind, description } = note.data;
 const isDropCap = kind === 'prose';
 
 const formatDate = (d: Date | undefined) => d?.toISOString().split('T')[0];
+const fmt = (d: Date | undefined) => d?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 const dateStr = formatDate(date);
 const modifiedStr = formatDate(modified);
 
@@ -59,7 +60,7 @@ let h2Count = 0;
 let h3Count = 0;
 let h4Count = 0;
 
-for (const h of headings) {
+for (const h of headings.filter(h => h.slug !== 'footnote-label')) {
   if (h.depth === 2) {
     h2Count++;
     h3Count = 0;
@@ -78,7 +79,7 @@ for (const h of headings) {
 <Base
   title={title}
   description={description}
-  activeNav={note.collection}
+  activeNav={note.collection === "projects" ? "projects" : "writing"}
   canonicalUrl={noteCanonical}
   ogType="article"
   publishedTime={date?.toISOString()}
@@ -89,25 +90,16 @@ for (const h of headings) {
     <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
   </Fragment>
-  <div class="sticky-header" id="sticky-header">
-    <div class="sticky-title">{title}</div>
-    <div class="sticky-section" id="sticky-section"></div>
-    <div class="sticky-progress-container">
-      <div class="sticky-progress-bar" id="sticky-progress"></div>
-    </div>
-  </div>
+  <div class="read-progress" id="read-progress" aria-hidden="true"></div>
 
-  <div class="note-layout">
-
-    <!-- Left sidebar: TOC -->
-    <aside class="note-sidebar-left" id="note-toc-sidebar">
+  <div class="note">
+    <aside class="note-toc">
       {tocItems.length > 0 && (
-        <nav class="toc" aria-label="Table of contents">
+        <nav class="toc" aria-label="Contents">
           <p class="toc-label">Contents</p>
-          <ol class="toc-list">
+          <ol>
             {tocItems.map(item => (
-              <li class={`toc-item depth-${item.heading.depth}`}>
-                <span class="toc-num">{item.label}</span>
+              <li class={`depth-${item.heading.depth}`}>
                 <a href={`#${item.heading.slug}`}>{item.heading.text}</a>
               </li>
             ))}
@@ -116,153 +108,62 @@ for (const h of headings) {
       )}
     </aside>
 
-    <!-- Center: note content -->
-    <div class="note-body">
+    <article class="note-main">
       <header class="note-header">
-        <p class="note-tags">
-          <a href={`/${note.collection}/`} class="note-tag" style="font-style: italic; font-weight: 400;">{note.collection}</a>
-        </p>
-
+        <p class="note-kicker"><a href={`/${note.collection}`}>{COLLECTION_LABEL[note.collection]}</a></p>
         <h1 class="note-title">{title}</h1>
-
         {description && <p class="note-description">{description}</p>}
-
         <div class="note-meta">
-          <span class="note-meta-author">by Ramjan</span>
-          <span class="sep">·</span>
-          <span class="note-meta-dates">
-            {dateStr}{modifiedStr && modifiedStr !== dateStr && (
-              <>–{modifiedStr}</>
-            )}
-          </span>
-          <span class="sep">·</span>
-          <span class="note-meta-stage" title={`Stage: ${STAGE_LABEL[stage]}`}>
-            {stage} {STAGE_SYMBOL[stage]}
-          </span>
+          {dateStr && <time datetime={dateStr}>{fmt(date)}</time>}
+          {modifiedStr && modifiedStr !== dateStr && <span>Updated {fmt(modified)}</span>}
+          <span title="How finished this note is">{STAGE_LABEL[stage]}</span>
+          {tags && tags.length > 0 && tags.map(tag => <a href={`/tags/${tag}`}>#{tag}</a>)}
         </div>
-        {tags && tags.length > 0 && (
-          <div class="note-meta note-tags-row" style="margin-top: 0.35rem;">
-            {tags.map(tag => (
-              <a href={`/tags/${tag}`} class="note-tag-pill">#{tag}</a>
-            ))}
-          </div>
-        )}
       </header>
 
       <div class:list={['prose', isDropCap && 'drop-cap']}>
         <slot />
       </div>
 
-      <!-- Similar Links (Gwern style) -->
       {backlinks.length > 0 && (
-        <div id="similar" class="similar-links-section">
-          <div class="similar-links-heading">Similar Links</div>
-          <ul class="similar-links-grid">
+        <section class="note-links" aria-labelledby="linked-from">
+          <h2 id="linked-from">Linked from</h2>
+          <ul>
             {backlinks.map(link => (
-              <li>
-                <a href={noteUrl(link.collection as GardenCollection, link.slug)}>
-                  {link.title}
-                </a>
-              </li>
+              <li><a href={noteUrl(link.collection as GardenCollection, link.slug)}>{link.title}</a></li>
             ))}
           </ul>
-        </div>
+        </section>
       )}
 
-      <div style="text-align: center; margin: 4rem 0 2rem; font-family: var(--serif); font-size: 0.9rem;">
-        <a href={`/${note.collection}/`} style="text-decoration: none; color: var(--muted);">
-          ⌊ Return to {note.collection} index ↖
-        </a>
-      </div>
-    </div>
+      <p class="note-back"><a href={`/${note.collection}`}>All {COLLECTION_LABEL[note.collection].toLowerCase()}</a></p>
+    </article>
 
-    <!-- Right sidebar: sidenotes -->
-    <aside class="note-sidebar-right">
-      <div class="sidenote-column" id="sidenote-column"></div>
+    <aside class="note-side">
+      <div id="sidenote-column"></div>
     </aside>
-
   </div>
 </Base>
 
 <script>
   import '../scripts/sidenotes.js';
 
-  // Sticky header: progress + current section tracking
-  const stickyHeader = document.getElementById('sticky-header');
-  const progressBar  = document.getElementById('sticky-progress');
+  const bar = document.getElementById('read-progress');
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc a'));
+  const heads = tocLinks
+    .map(a => document.getElementById(decodeURIComponent(a.hash.slice(1))))
+    .filter((h): h is HTMLElement => !!h && h.offsetParent !== null);
 
-  // Progress bar + show-while-scrolling, hide 1s after scrolling stops
-  let hideTimeout: ReturnType<typeof setTimeout> | undefined;
+  function onScroll() {
+    const el = document.documentElement;
+    const max = el.scrollHeight - el.clientHeight;
+    if (bar) bar.style.width = (max > 0 ? (el.scrollTop / max) * 100 : 0) + '%';
 
-  if (progressBar) {
-    window.addEventListener('scroll', () => {
-      const winScroll = document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      progressBar.style.width = ((winScroll / height) * 100) + '%';
-
-      clearTimeout(hideTimeout);
-
-      if (winScroll > 200) {
-        stickyHeader?.classList.add('visible');
-        hideTimeout = setTimeout(() => {
-          stickyHeader?.classList.remove('visible');
-        }, 1000);
-      } else {
-        stickyHeader?.classList.remove('visible');
-      }
-    }, { passive: true });
+    const line = window.scrollY + window.innerHeight * 0.25;
+    let current = -1;
+    heads.forEach((h, i) => { if (h.offsetTop <= line) current = i; });
+    tocLinks.forEach((a, i) => a.classList.toggle('is-active', heads[current] && a.hash.slice(1) === heads[current].id));
   }
-
-  // Section tracking: find the last heading above the viewport midpoint on every scroll
-  const stickySection = document.getElementById('sticky-section');
-
-  if (stickySection) {
-    const headings = Array.from(
-      document.querySelectorAll<HTMLElement>('.prose h1, .prose h2, .prose h3')
-    );
-
-    function updateSection() {
-      const mid = window.scrollY + window.innerHeight * 0.25;
-      let active: HTMLElement | null = null;
-
-      for (const h of headings) {
-        if (h.offsetTop <= mid) active = h;
-        else break;
-      }
-
-      let newHTML = '';
-      if (active) {
-        const tag = active.tagName;
-        const text = active.textContent ?? '';
-
-        if (tag === 'H3') {
-          const idx = headings.indexOf(active);
-          let parentText = '';
-          for (let i = idx - 1; i >= 0; i--) {
-            if (headings[i].tagName === 'H2') {
-              parentText = headings[i].textContent ?? '';
-              break;
-            }
-          }
-          newHTML = parentText
-            ? `<span>${parentText}</span><span class="sticky-subsection">${text}</span>`
-            : `<span>${text}</span>`;
-        } else {
-          newHTML = `<span>${text}</span>`;
-        }
-      }
-
-      if (stickySection.innerHTML !== newHTML) {
-        stickySection.classList.add('fade');
-        setTimeout(() => {
-          stickySection.innerHTML = newHTML;
-          stickySection.style.display = newHTML ? 'flex' : 'none';
-          stickySection.classList.remove('fade');
-        }, 200);
-      }
-    }
-
-    window.addEventListener('scroll', updateSection, { passive: true });
-    updateSection();
-  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 </script>

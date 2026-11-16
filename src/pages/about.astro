@@ -2,12 +2,10 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="About" description="Ramjan Khandelwal: building systems, thinking across domains." activeNav="about">
-  <div class="container">
-    <header class="about-header">
-      <h1 class="page-title">About</h1>
-    </header>
+  <div class="page">
+    <h1 class="page-title">About</h1>
 
-    <div class="prose">
+    <div class="prose" style="max-width: var(--read)">
       <p>
         I'm Ramjan.
       </p>
@@ -36,7 +34,3 @@ import Base from '../layouts/Base.astro';
     </div>
   </div>
 </Base>
-
-<style>
-  .about-header { padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-</style>

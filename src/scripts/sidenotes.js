@@ -5,13 +5,13 @@
  * into the right-margin sidenote column, positioned vertically next to
  * their inline reference superscript.
  *
- * On screens narrower than 1001px, does nothing (footnotes stay inline).
+ * On screens narrower than 1101px, does nothing (footnotes stay inline).
  */
 (function () {
   'use strict';
 
   function initSidenotes() {
-    if (window.innerWidth <= 1000) return;
+    if (window.innerWidth <= 1100) return;
 
     const column = document.getElementById('sidenote-column');
     if (!column) return;
@@ -52,8 +52,7 @@
     if (allRefs.length === 0) return;
 
     // Get the column's top offset for positioning
-    const columnRect = column.getBoundingClientRect();
-    const columnTop  = column.offsetTop;
+    const columnTop = column.getBoundingClientRect().top + (window.scrollY || window.pageYOffset);
 
     // Track the lowest bottom of previously placed sidenotes to avoid overlap
     let lastBottom = 0;

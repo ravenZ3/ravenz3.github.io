@@ -1,0 +1,318 @@
+---
+import type { Project } from '../data/projects';
+import { bench, compare } from '../data/projects';
+
+interface Props {
+  project: Project;
+  full?: boolean;
+  compact?: boolean;
+}
+
+const { project, full = false, compact = false } = Astro.props;
+const max = Math.max(...bench.flatMap(b => [b.epoll, b.select]));
+const fmt = (n: number) => (n / 1000).toFixed(1) + 'k';
+---
+{compact ? (
+<article class="project project-compact" id={project.slug}>
+  <a class="compact-link" href={`/projects#${project.slug}`}>
+    <h3 class="project-name">{project.name}</h3>
+    <p class="compact-result">{project.result}</p>
+    <p class="project-stack">{project.stack.join(', ')}</p>
+  </a>
+  <span class="project-links">
+    {project.live && <a href={project.live} target="_blank" rel="noopener">Live demo</a>}
+    {project.repo && <a href={project.repo} target="_blank" rel="noopener">Code</a>}
+  </span>
+</article>
+) : (
+<article class="project" id={project.slug}>
+  <header class="project-head">
+    <h3 class="project-name">{project.name}</h3>
+    <span class="project-links">
+      {project.live && <a href={project.live} target="_blank" rel="noopener">Live demo</a>}
+      {project.repo && <a href={project.repo} target="_blank" rel="noopener">Code</a>}
+    </span>
+  </header>
+
+  <p class="project-summary">{project.summary}</p>
+  <p class="project-result">{project.result}</p>
+
+  {project.visual === 'bench' && (
+    <figure class="bench">
+      <div class="bench-rows" role="img" aria-label="Requests per second with one active client: epoll stays near 11 thousand from 0 to 1000 idle connections; select falls from 11.7 thousand to 1.8 thousand.">
+        {bench.map(b => (
+          <div class="bench-row">
+            <span class="bench-idle">{b.idle.toLocaleString('en-US')} idle</span>
+            <span class="bench-bars">
+              <span class="bar bar-epoll" style={`width:${(b.epoll / max) * 100}%`}><span>{fmt(b.epoll)}</span></span>
+              <span class="bar bar-select" style={`width:${(b.select / max) * 100}%`}><span>{fmt(b.select)}</span></span>
+            </span>
+          </div>
+        ))}
+      </div>
+      <figcaption>
+        <span class="key key-epoll"></span>epoll
+        <span class="key key-select"></span>select()
+        <span class="bench-note">requests per second, one active client, median of 3 runs</span>
+      </figcaption>
+    </figure>
+  )}
+
+  {project.visual === 'compare' && (
+    <figure class="cmp">
+      <div class="cmp-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">What the agent did</th><th scope="col">Answer-only score</th><th scope="col">Trajectory score</th></tr>
+          </thead>
+          <tbody>
+            {compare.map(r => (
+              <tr>
+                <th scope="row">{r.what}</th>
+                <td><span class="pass">Pass</span> {r.ragas}</td>
+                <td><span class="fail">Fail</span> {r.traj}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </figure>
+  )}
+
+  {project.visual === 'before-after' && (
+    <figure class="ba">
+      <div class="ba-pair">
+        <img src="/images/projects/pixelflow-tree-before.jpg" alt="Unedited photo of bare trees over a garden pond" width="640" height="640" loading="lazy" />
+        <img src="/images/projects/pixelflow-tree-after.jpg" alt="The same photo after Pixel Flow's graph: muted greens, warm highlights, magenta shadows" width="640" height="640" loading="lazy" />
+      </div>
+      <figcaption>Before and after one prompt: “soft cinematic film look with muted greens, warm highlights, magenta-tinted shadows.”</figcaption>
+    </figure>
+  )}
+
+  {project.visual === 'screenshot' && project.images && (
+    <figure class="ba">
+      <div class="phones">
+        {project.images.map(img => (
+          <div class="phone">
+            <img src={img.src} alt={img.alt} width="515" height="832" loading="lazy" />
+          </div>
+        ))}
+      </div>
+      {project.caption && <figcaption>{project.caption}</figcaption>}
+    </figure>
+  )}
+
+  {full && (
+    <ul class="project-details">
+      {project.details.map(d => <li>{d}</li>)}
+    </ul>
+  )}
+
+  <p class="project-stack">{project.stack.join(', ')}</p>
+</article>
+)}
+
+<style>
+  .project {
+    padding: 1.4rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .project-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.35rem;
+  }
+  .project-name {
+    font-family: var(--pixel);
+    font-size: 1.95rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    color: var(--text);
+    margin: 0;
+  }
+  .project-links {
+    display: flex;
+    gap: 1.1rem;
+    font-family: var(--display);
+    font-size: 0.78rem;
+  }
+  .project-links a {
+    color: var(--muted);
+    text-decoration: none;
+    text-decoration-color: var(--border);
+    text-underline-offset: 4px;
+  }
+  .project-links a:hover { color: var(--text); text-decoration-color: var(--muted); }
+
+  .project-summary {
+    font-family: var(--display);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--muted);
+    margin: 0 0 0.7rem;
+    max-width: 62ch;
+  }
+  .project-result {
+    font-family: var(--display);
+    font-size: 1.08rem;
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 0 0 0.8rem;
+    padding-left: 0.85rem;
+    border-left: 2px solid var(--text);
+    max-width: 58ch;
+  }
+  .project-details {
+    font-family: var(--display);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--muted);
+    margin: 0 0 1rem 1.1rem;
+    max-width: 62ch;
+  }
+  .project-details li { margin-bottom: 0.3rem; }
+  .project-stack {
+    font-family: var(--display);
+    font-size: 0.75rem;
+    color: var(--faint);
+    margin: 0;
+  }
+
+  /* Compact row */
+  .project-compact {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 0.25rem 1rem;
+    padding: 1rem 0;
+  }
+  .compact-link { text-decoration: none; color: inherit; display: block; }
+  .compact-link .project-name { font-size: 1.6rem; margin-bottom: 0.25rem; }
+  .compact-link:hover .project-name { color: var(--muted); }
+  .compact-result {
+    font-family: var(--display);
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--muted);
+    margin: 0 0 0.35rem;
+    max-width: 60ch;
+  }
+  .project-compact .project-links { padding-top: 0.35rem; }
+
+  /* Pass / fail comparison */
+  .cmp { margin: 0 0 0.8rem; }
+  .cmp-scroll { overflow-x: auto; }
+  .cmp table { width: 100%; border-collapse: collapse; font-family: var(--display); font-size: 0.78rem; }
+  .cmp th, .cmp td { text-align: left; padding: 0.5rem 0.75rem 0.5rem 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .cmp thead th { font-weight: 500; color: var(--faint); font-size: 0.72rem; }
+  .cmp tbody th { font-weight: 400; color: var(--text); }
+  .cmp td { color: var(--muted); white-space: nowrap; }
+  .pass, .fail {
+    display: inline-block;
+    font-family: var(--pixel);
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 0.2rem 0.35rem;
+    margin-right: 0.3rem;
+    border-radius: 2px;
+  }
+  .pass { border: 1px solid var(--border); color: var(--muted); }
+  .fail { background: var(--text); color: var(--bg); }
+
+  /* Benchmark bars */
+  .bench { margin: 0 0 0.8rem; }
+  .bench-rows { display: grid; gap: 0.4rem; }
+  .bench-row {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .bench-idle {
+    font-family: var(--display);
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .bench-bars { display: grid; gap: 3px; }
+  .bar {
+    display: block;
+    height: 0.95rem;
+    min-width: 2.6rem;
+    position: relative;
+    border-radius: 1px;
+  }
+  .bar span {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--display);
+    font-size: 0.6rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .bar-epoll { background: var(--text); }
+  .bar-epoll span { color: var(--bg); }
+  .bar-select { background: var(--surface2); box-shadow: inset 0 0 0 1px var(--border); }
+  .bar-select span { color: var(--text); }
+  .bench figcaption, .ba figcaption {
+    margin-top: 0.7rem;
+    font-family: var(--display);
+    font-size: 0.7rem;
+    color: var(--faint);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.4rem;
+  }
+  .key { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 1px; }
+  .key-epoll { background: var(--text); }
+  .key-select { background: var(--surface2); box-shadow: inset 0 0 0 1px var(--border); margin-left: 0.6rem; }
+  .bench-note { margin-left: 0.6rem; }
+
+  /* Phone screenshots in a simple frame */
+  .phones {
+    display: flex;
+    justify-content: center;
+    gap: clamp(1rem, 5vw, 2.5rem);
+    padding: 0.5rem 0 0;
+  }
+  .phone {
+    width: min(13rem, 44%);
+    padding: 7px;
+    border-radius: 2rem;
+    background: #1c1c1f;
+    box-shadow: inset 0 0 0 1px #34343a, 0 0 0 1px var(--border);
+  }
+  .phone img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: calc(2rem - 7px);
+  }
+  .ba .phones + figcaption { text-align: center; }
+
+  /* Before / after */
+  .ba { margin: 0 0 0.8rem; }
+  .ba-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .ba-pair img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+  .ba figcaption { display: block; line-height: 1.5; }
+
+  @media (max-width: 600px) {
+    .cmp thead { display: none; }
+    .cmp tbody tr { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); padding: 0.45rem 0; }
+    .cmp tbody th, .cmp td { border: 0; padding: 0.1rem 0; }
+    .cmp tbody th { grid-column: 1 / -1; }
+    .cmp td { white-space: normal; }
+    .bench-row { grid-template-columns: 4.2rem 1fr; gap: 0.5rem; }
+    .project-result { font-size: 1rem; }
+  }
+</style>
