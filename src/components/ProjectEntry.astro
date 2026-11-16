@@ -126,10 +126,10 @@ const fmt = (n: number) => (n / 1000).toFixed(1) + 'k';
     margin-bottom: 0.35rem;
   }
   .project-name {
-    font-family: var(--pixel);
-    font-size: 1.95rem;
-    font-weight: 400;
-    letter-spacing: 0.01em;
+    font-family: var(--head);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
     line-height: 1.2;
     color: var(--text);
     margin: 0;
@@ -193,7 +193,7 @@ const fmt = (n: number) => (n / 1000).toFixed(1) + 'k';
     padding: 1rem 0;
   }
   .compact-link { text-decoration: none; color: inherit; display: block; }
-  .compact-link .project-name { font-size: 1.6rem; margin-bottom: 0.25rem; }
+  .compact-link .project-name { font-size: 1.25rem; margin-bottom: 0.25rem; }
   .compact-link:hover .project-name { color: var(--muted); }
   .compact-result {
     font-family: var(--display);
@@ -215,8 +215,9 @@ const fmt = (n: number) => (n / 1000).toFixed(1) + 'k';
   .cmp td { color: var(--muted); white-space: nowrap; }
   .pass, .fail {
     display: inline-block;
-    font-family: var(--pixel);
-    font-size: 0.9rem;
+    font-family: var(--head);
+    font-size: 0.66rem;
+    font-weight: 700;
     line-height: 1;
     padding: 0.2rem 0.35rem;
     margin-right: 0.3rem;
