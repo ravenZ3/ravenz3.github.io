@@ -16,12 +16,7 @@ const fmt = (d?: Date) => d?.toLocaleDateString('en-GB', { month: 'short', year:
   <div class="home">
 
     <section class="intro" aria-label="Introduction">
-      <ul class="intro-qa">
-        <li>How do you know an agent was right for the right reason? <a href="/projects#agentic-rag-eval-harness">Score the path it took.</a></li>
-        <li>Can an LLM edit photos the same way twice? <a href="/projects#pixel-flow">Only if it writes a graph.</a></li>
-        <li>How does Redis serve thousands of clients on one thread? <a href="/projects#rediscpp">I wrote one to find out.</a></li>
-      </ul>
-      <p class="intro-body">Hi, I'm Ramjan. I'm learning and making projects on things that interest me. I'm currently learning about backend and inference infra, and implementing ML papers in three ways (numpy, jax, pytorch) to develop the math intuition and the code execution as well. I love to write, and in the writing section you'll find articles that were lying around in my Obsidian notes or journal. I'm eventually working my way towards ML research.</p>
+      <p class="intro-body">Hi, I'm Ramjan. I'm learning backend and inference infra, and implementing ML papers in numpy, jax and pytorch to build the math intuition alongside working code. I also write; the articles are from my notes and journal. I'm working my way towards ML research.</p>
       <p class="intro-body">Open to ML engineer, AI engineer, and forward deployed engineer roles.</p>
       <Contact />
     </section>
@@ -103,10 +98,6 @@ const fmt = (d?: Date) => d?.toLocaleDateString('en-GB', { month: 'short', year:
 
   /* Intro */
   .intro { position: relative; padding-bottom: 2.25rem; }
-  .intro-qa { list-style: none; padding: 0; margin: 0 0 1rem; display: grid; gap: 0.3rem; }
-  .intro-qa li { font-size: 0.86rem; line-height: 1.5; color: var(--muted); }
-  .intro-qa a { color: var(--text); font-weight: 500; text-decoration: none; }
-  .intro-qa a:hover { color: var(--muted); }
   .intro-body { font-size: 0.86rem; color: var(--muted); margin: 0 0 1rem; }
 
   /* Section heads */
